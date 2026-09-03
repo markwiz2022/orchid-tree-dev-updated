@@ -23,6 +23,17 @@ echo "→ syncing production files into .deploy/"
 cp -f "${PAGES[@]}" .deploy/
 cp -f shared/*.js .deploy/shared/
 cp -f images/* .deploy/images/ 2>/dev/null || true
+# The owner's videos and the room reels, once they exist. shared/media.js points
+# at these paths; until a file is dropped in, the manifest entry stays null and
+# nothing here is copied.
+if compgen -G "videos/**/*.mp4" > /dev/null 2>&1 || compgen -G "videos/*/*" > /dev/null 2>&1; then
+  mkdir -p .deploy/videos/owner .deploy/videos/rooms
+  cp -f videos/owner/* .deploy/videos/owner/ 2>/dev/null || true
+  cp -f videos/rooms/* .deploy/videos/rooms/ 2>/dev/null || true
+fi
+# home.html and index.html are the same page: index.html is the working copy and
+# home.html is what the site's own nav links to. Keep them in lockstep.
+cp -f index.html home.html
 cp -f home.html .deploy/index.html      # "/" serves the latest home page
 # Note: the hero video (ORCHID_WEBISTE_9febd4b485.mov) already lives in .deploy/
 # and is left untouched so it isn't re-uploaded on every deploy.
