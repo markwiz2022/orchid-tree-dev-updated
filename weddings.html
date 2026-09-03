@@ -350,6 +350,77 @@
   .progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--gold);z-index:60;transition:width .08s linear;}
 
   /* MARQUEE — drifting promise ticker */
+  /* ───────────── LIVE AND LET LIVE + TRADITIONAL RITUALS ─────────────
+     The eco promise restated as a creed, then the Gau Pooja / Ashwa Pooja
+     rituals with the animals who actually live on the farm. */
+  .creed{position:relative;background:var(--cream-deep);overflow:hidden;
+    padding:clamp(84px,12vh,140px) 0 clamp(70px,10vh,110px);}
+  .creed::before{content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(62% 52% at 50% 0%,rgba(201,162,60,.16),transparent 64%);}
+  .creed .creed-inner{position:relative;max-width:900px;margin:0 auto;text-align:center;}
+  .creed h2{font-family:var(--serif);font-weight:400;color:var(--ink);
+    font-size:clamp(38px,5.6vw,74px);line-height:1.04;letter-spacing:-1px;}
+  .creed h2 em{font-style:italic;color:var(--green);}
+  .creed .creed-body{margin-top:26px;font-size:clamp(16px,1.6vw,19px);line-height:1.9;
+    color:var(--body);max-width:720px;margin-left:auto;margin-right:auto;}
+  .creed .creed-rule{width:64px;height:1px;background:var(--gold);margin:34px auto 0;opacity:.85;}
+  .creed .creed-live{margin-top:26px;font-family:var(--serif);font-style:italic;
+    font-size:clamp(21px,2.4vw,30px);line-height:1.45;color:var(--ink);}
+  .creed .creed-live b{font-style:normal;font-weight:500;color:var(--green);}
+
+  .tradition{background:var(--cream);padding:clamp(78px,11vh,130px) 0;}
+  .tradition .trad-head{max-width:820px;}
+  .tradition .trad-head h2{font-family:var(--serif);font-weight:400;color:var(--ink);
+    font-size:clamp(32px,4.4vw,56px);line-height:1.08;margin-bottom:18px;}
+  .tradition .trad-head .muted{font-size:clamp(16px,1.6vw,18.5px);line-height:1.85;max-width:720px;}
+  .tradition .trad-note{margin-top:18px;font-family:var(--serif);font-style:italic;
+    font-size:19px;color:var(--green);}
+
+  /* asymmetric photo set: one tall hero, two stacked beside it */
+  .trad-set{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;margin-top:52px;align-items:stretch;}
+  .trad-stack{display:grid;grid-template-rows:1fr 1fr;gap:22px;min-width:0;}
+  .tslot{position:relative;border-radius:var(--radius);overflow:hidden;background:var(--media);min-height:200px;}
+  .trad-set > .tslot{min-height:560px;}
+  .tslot img{display:block;width:100%;height:100%;object-fit:cover;
+    transition:transform 1s cubic-bezier(.2,.7,.2,1);}
+  .tslot:hover img{transform:scale(1.045);}
+  .tslot .tveil{position:absolute;inset:0;
+    background:linear-gradient(to top,rgba(28,22,16,.76),rgba(28,22,16,.06) 52%);}
+  .tslot .tcap{position:absolute;left:0;right:0;bottom:0;padding:26px;color:#fff;z-index:2;}
+  .tslot .tcap .k{font-size:10px;letter-spacing:3px;text-transform:uppercase;
+    color:var(--gold-soft);font-weight:700;margin-bottom:8px;}
+  .tslot .tcap .n{font-family:var(--serif);font-size:clamp(21px,2.2vw,30px);line-height:1.16;color:#fff;}
+  .tslot .tcap .d{font-size:13.5px;line-height:1.6;color:rgba(255,255,255,.85);margin-top:8px;max-width:40ch;}
+  /* empty state — the photo has not been supplied yet. Drop the file at the
+     src path below and the slot fills itself; no code change needed. */
+  .tslot.empty img{display:none;}
+  .tslot.empty{background:
+    repeating-linear-gradient(135deg,rgba(179,169,148,.14) 0 12px,transparent 12px 24px),var(--media);
+    border:1px dashed rgba(179,169,148,.7);}
+  .tslot.empty .tveil{background:linear-gradient(to top,rgba(28,22,16,.42),transparent 60%);}
+  .tslot.empty::after{content:"Photograph to come";position:absolute;top:16px;left:16px;z-index:3;
+    background:rgba(255,255,255,.9);color:var(--media-tx);font-size:9px;font-weight:700;
+    letter-spacing:2px;text-transform:uppercase;padding:5px 10px;border-radius:20px;}
+  .tslot.empty .tcap .n,.tslot.empty .tcap .d{color:var(--ink);text-shadow:none;}
+  .tslot.empty .tcap .k{color:var(--green);}
+
+  /* the two named rituals */
+  .rituals{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:22px;}
+  .ritual{border:1px solid var(--line);border-radius:var(--radius);padding:30px;background:var(--card);}
+  .ritual .rk{display:flex;align-items:baseline;gap:12px;margin-bottom:12px;}
+  .ritual .rk .num{font-family:var(--serif);font-size:15px;color:var(--gold);letter-spacing:1px;}
+  .ritual h3{font-family:var(--serif);font-size:26px;font-weight:500;color:var(--ink);line-height:1.15;}
+  .ritual .sub{font-size:10.5px;letter-spacing:2.4px;text-transform:uppercase;
+    font-weight:700;color:var(--media-tx);margin-top:6px;}
+  .ritual p{font-size:15px;line-height:1.7;color:var(--body);margin-top:14px;}
+  @media(max-width:900px){
+    .trad-set{grid-template-columns:1fr;}
+    .trad-set > .tslot{min-height:400px;}
+    .trad-stack{grid-template-rows:auto auto;}
+    .tslot{min-height:280px;}
+    .rituals{grid-template-columns:1fr;}
+  }
+
   .marquee{background:var(--ink);overflow:hidden;padding:20px 0;}
   .marquee .track{display:flex;width:max-content;white-space:nowrap;will-change:transform;animation:marq 34s linear infinite;}
   .marquee:hover .track{animation-play-state:paused;}
@@ -539,8 +610,9 @@
         <h2>Who is this wedding really for?</h2>
       </div>
       <div class="founder-grid reveal">
-        <!-- VIDEO SLOT: 60 to 90 sec founder film, filmed on the estate. Replace with the real clip when ready. -->
-        <div class="film" role="img" aria-label="Founder film placeholder, a note from Pradeep">
+        <!-- Founder film. The clip itself is set in shared/media.js (OWNER.weddings);
+             until it has a src this stays a poster + play button. -->
+        <div class="film" id="founderFilm" role="button" tabindex="0" aria-label="Play the founder film, a note from Pradeep">
           <!-- PLACEHOLDER poster: Pradeep's portrait from the property's own site. Swap for a real founder-film still when the clip is shot. -->
           <img class="film-img" src="https://orchidtree.in/uploads/pradip_aboutus_a82dd2aa16.jpg" alt="Pradeep Kuppa Swamy, landscape architect and founder of Orchid Tree, photographed on the estate" width="1200" height="800" loading="lazy" decoding="async">
           <div class="film-veil"></div>
@@ -604,6 +676,77 @@
       <span>Real flowers</span><span>Candlelight</span><span>No firecrackers</span><span>No plastic decor</span><span>Acoustic and live music</span><span>One wedding at a time</span>
     </div>
   </div>
+
+  <!-- 4b. CELEBRATE BEAUTIFULLY. LEAVE LIGHTLY. — the creed -->
+  <section class="creed" aria-label="Celebrate beautifully, leave lightly">
+    <div class="wrap">
+      <div class="creed-inner reveal">
+        <div class="eyebrow hair" style="justify-content:center;margin-bottom:24px;">Our promise</div>
+        <h2>Celebrate Beautifully.<br><em>Leave Lightly.</em></h2>
+        <p class="creed-body">An eco-friendly, intimate wedding venue near Bangalore, where nature comes first. Reusable decor, candlelight, natural flowers, organic and locally sourced food, no plastic, no firecrackers and mindful sound.</p>
+        <div class="creed-rule"></div>
+        <p class="creed-live">We share this land with birds, animals and our neighbouring village &mdash; celebration here means <b>live and let live.</b></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4c. A WEDDING ROOTED IN TRADITION — Gau Pooja & Ashwa Pooja -->
+  <!-- PHOTOGRAPHS: drop the files at the src paths below and each slot fills
+       itself. Until then they render as labelled empty slots (see the onerror
+       handler at the foot of this page). -->
+  <section class="tradition" aria-label="A wedding rooted in tradition">
+    <div class="wrap">
+      <div class="trad-head reveal">
+        <div class="eyebrow hair">Karnataka heritage</div>
+        <h2>A Wedding Rooted in Tradition</h2>
+        <p class="muted">For families who wish, traditional <em>Gau Pooja</em> and <em>Ashwa Pooja</em> can become part of the wedding morning with the cattle and horse who live on our farm. A quiet Karnataka heritage wedding ritual, surrounded by nature, family and blessings.</p>
+        <p class="trad-note">Never a spectacle.</p>
+      </div>
+
+      <div class="trad-set reveal">
+        <div class="tslot empty">
+          <img src="images/wedding-gau-pooja.jpg" alt="Gau Pooja on the wedding morning at Orchid Tree, the family offering prayers to the cattle who live on the farm" width="1200" height="1500" loading="lazy" decoding="async">
+          <div class="tveil"></div>
+          <div class="tcap">
+            <div class="k">Gau Pooja</div>
+            <div class="n">The morning begins<br>with the cattle</div>
+            <div class="d">Garlanded, fed by hand, blessed by the family before the day starts.</div>
+          </div>
+        </div>
+        <div class="trad-stack">
+          <div class="tslot empty">
+            <img src="images/wedding-ashwa-pooja.jpg" alt="Ashwa Pooja at Orchid Tree, the horse who lives on the farm garlanded and blessed as part of the wedding morning" width="900" height="600" loading="lazy" decoding="async">
+            <div class="tveil"></div>
+            <div class="tcap">
+              <div class="k">Ashwa Pooja</div>
+              <div class="n">And with the horse</div>
+            </div>
+          </div>
+          <div class="tslot empty">
+            <img src="images/wedding-farm-cattle.jpg" alt="The cattle grazing on the farm at Orchid Tree, part of the working estate shared with the wedding" width="900" height="600" loading="lazy" decoding="async">
+            <div class="tveil"></div>
+            <div class="tcap">
+              <div class="k">They live here</div>
+              <div class="n">Not brought in for the day</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rituals reveal">
+        <div class="ritual">
+          <div class="rk"><span class="num">01</span><div><h3>Gau Pooja</h3><div class="sub">With the cattle of the farm</div></div></div>
+          <p>The cows are washed, garlanded and fed by hand, and the family offers prayers before the wedding rites begin. An old Karnataka way of asking the household&rsquo;s animals for their blessing on the marriage.</p>
+        </div>
+        <div class="ritual">
+          <div class="rk"><span class="num">02</span><div><h3>Ashwa Pooja</h3><div class="sub">With the horse of the farm</div></div></div>
+          <p>The horse is honoured the same way, often before the groom&rsquo;s procession. Kept quiet and unhurried &mdash; a blessing among family, not a performance for a crowd.</p>
+        </div>
+      </div>
+
+      <p class="fine-note reveal">These rituals are offered only if your family wants them. The animals are residents of the working farm, and their comfort sets the pace &mdash; no crowding, no noise, no firecrackers.</p>
+    </div>
+  </section>
 
   <!-- 5. THE LIFESTYLE WEDDING — spaces -->
   <section class="fit" aria-label="How the wedding moves through the estate">
@@ -910,6 +1053,45 @@
   </a>
 
   <script>
+  // Tradition photo slots. Each slot ships in its empty state and only clears
+  // it once its photograph actually decodes — so a missing or broken file can
+  // never render as a broken-image icon, it just stays a labelled slot. Drop a
+  // file at the slot's src path and it fills itself; no code change needed.
+  (function(){
+    Array.prototype.forEach.call(document.querySelectorAll('.tslot img'), function(img){
+      function fill(){
+        if(!img.naturalWidth) return;            // decoded, but empty — treat as missing
+        var s = img.closest('.tslot');
+        if(s) s.classList.remove('empty');
+      }
+      if(img.complete) fill();
+      img.addEventListener('load', fill);
+    });
+  })();
+  </script>
+
+  <script src="shared/media.js"></script>
+  <script src="shared/video.js"></script>
+  <script>
+  // the founder film — a real player behind the existing poster block
+  (function(){
+    var box = document.getElementById('founderFilm');
+    var v = window.OrchidMedia && OrchidMedia.owner('weddings');
+    if(!box || !v) return;
+    var items = [{ kind:'video', src:v.src, poster:v.poster, portrait:v.portrait !== false,
+                   label:v.label, ready:!!v.src }];
+    function play(){ OrchidVideo.open(items, 0); }
+    box.addEventListener('click', play);
+    box.addEventListener('keydown', function(ev){
+      if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); play(); }
+    });
+    if(!v.src){
+      var tag = box.querySelector('.tagcorner');
+      if(tag) tag.textContent = 'Founder film · coming soon';
+    }
+  })();
+  </script>
+  <script>
   (function(){
     // ---- nav solidify on scroll (from home.html) ----
     var nav = document.getElementById('nav');
@@ -1063,6 +1245,9 @@
     })();
   })();
   </script>
+
+  <script src="shared/nav.js" defer></script>
+
 
 </body>
 </html>

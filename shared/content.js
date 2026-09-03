@@ -22,23 +22,29 @@
       sections: [
         { title: "Booking and cancellation", items: [
           "Your booking is confirmed once the full amount is paid on this page.",
-          "Full refund on cancellations up to 48 hours before check-in.",
-          "No refund for cancellations after that.",
+          "Full refund on cancellations made 48 hours or more before check-in.",
+          "No refund for cancellations within 48 hours of check-in, no-shows or early departures.",
         ] },
-        { title: "Dining", items: [
-          "Orchid Tree serves curated Nepali and North Indian cuisine.",
-          "Outside food deliveries are not permitted.",
-          "Glassware is not allowed near the water.",
-        ] },
-        { title: "Smoking", items: [
-          "All rooms are strictly non-smoking.",
-          "Smoking is allowed only in the designated outdoor zones.",
+        { title: "Room occupancy", items: [
+          "Couple Rooms accommodate 2 adults + 1 child up to 8 years, sharing one American-standard queen bed.",
+          "No extra bed, mattress or additional sleeping arrangement is provided.",
         ] },
         { title: "At the property", items: [
-          "A government photo ID is required at check-in.",
+          "Every adult guest must present a valid government photo ID at check-in.",
+          "Drivers, caretakers and personal staff are not allowed inside unless a separate room is booked for them.",
           "Quiet hours are observed after 10:30 PM.",
-          "Unregistered visitors are not permitted.",
-          "Pets are welcome except in the Couple Rooms by the Pool. A valid vaccination certificate is required at check-in.",
+          "Pets are welcome only in pet-friendly rooms. Please carry a valid vaccination certificate.",
+          "Pets must be kept on a leash in all common areas.",
+        ] },
+        { title: "Dining, alcohol and smoking", items: [
+          "Outside food and deliveries are not permitted. There is no room service.",
+          "Orchid Tree does not sell or serve alcohol. Personal beverages may be enjoyed only in designated areas and remain the guest's responsibility.",
+          "All rooms are non-smoking. Smoking is allowed only in designated outdoor zones.",
+        ] },
+        { title: "Photography and videography", items: [
+          "Personal photography is welcome.",
+          "Commercial photography, pre-wedding shoots, wedding photography, product launches, or any shoot involving outside photographers or videographers must be informed in advance, approved by Orchid Tree, and will attract additional charges.",
+          "Orchid Tree may photograph or record guests only with their consent, and approved content may be used for business development.",
         ] },
       ],
     },
@@ -117,9 +123,16 @@
           { label: "Bonfire", icon: "fire" },
           { label: "Stargazing", icon: "star" },
         ] },
+        { label: "The commons", items: [
+          { label: "Football", icon: "ball" },
+          { label: "Volleyball", icon: "volley" },
+          { label: "Cricket", icon: "cricket" },
+        ] },
         { label: "Around the estate", items: [
           { label: "Farm visit, about 1 km away", icon: "leaf" },
-          { label: "Buggy ride to the farm", icon: "car" },
+          { label: "Jungle walk", icon: "trail" },
+          { label: "Banyan tree visit", icon: "tree" },
+          { label: "Restaurant", icon: "fork" },
           { label: "Birdwatching", icon: "binoculars" },
           { label: "Adventure trails and SUV-friendly routes nearby", icon: "trail" },
         ] },
@@ -184,10 +197,10 @@
     policies: [
       "Your booking is confirmed once the full amount is paid on this page.",
       "Full refund if cancelled 48 hours or more before check-in. No refund after that.",
-      "Plated meals only. No outside food. No glassware near the water.",
-      "BYOB in the outdoor lounge.",
-      "Non-smoking rooms. Smoking in the designated outdoor zones.",
-      "Pets are welcome, except in the Couple Rooms by the Pool.",
+      "Couple Rooms sleep 2 adults + 1 child up to 8 years, on one queen bed. No extra bed.",
+      "Plated meals only. No outside food. No room service.",
+      "We do not sell alcohol. Personal beverages only in designated areas.",
+      "Pets are welcome only in pet-friendly rooms and must be leashed in common areas.",
     ],
 
     // all five real reviews held here; three are placed on the page (see below)

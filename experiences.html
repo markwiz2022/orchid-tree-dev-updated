@@ -4,18 +4,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Things to Do at a Nature Resort near Bangalore | Orchid Tree</title>
-  <meta name="description" content="How a day unfolds at Orchid Tree, a nature estate 45 minutes from Whitefield. Ozone pool, farm and buggy rides, bonfires, stargazing, games and deep rest.">
+  <meta name="description" content="How a day unfolds at Orchid Tree, a nature estate 45 minutes from Whitefield. Ozone pool, farm visits, bonfires, stargazing, games and deep rest.">
   <link rel="canonical" href="https://orchid-sigma.vercel.app/experiences.html">
   <meta name="robots" content="index,follow">
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:title" content="Things to Do at a Nature Resort near Bangalore | Orchid Tree">
-  <meta property="og:description" content="How a day unfolds at Orchid Tree, a nature estate 45 minutes from Whitefield. Ozone pool, farm and buggy rides, bonfires, stargazing, games and deep rest.">
+  <meta property="og:description" content="How a day unfolds at Orchid Tree, a nature estate 45 minutes from Whitefield. Ozone pool, farm visits, bonfires, stargazing, games and deep rest.">
   <meta property="og:url" content="https://orchid-sigma.vercel.app/experiences.html">
   <meta property="og:image" content="https://orchidtree.in/uploads/Experience_section_jpg_afb1c77479.webp">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Things to Do at a Nature Resort near Bangalore | Orchid Tree">
-  <meta name="twitter:description" content="How a day unfolds at Orchid Tree, a nature estate 45 minutes from Whitefield. Ozone pool, farm and buggy rides, bonfires, stargazing, games and deep rest.">
+  <meta name="twitter:description" content="How a day unfolds at Orchid Tree, a nature estate 45 minutes from Whitefield. Ozone pool, farm visits, bonfires, stargazing, games and deep rest.">
   <meta name="twitter:image" content="https://orchidtree.in/uploads/Experience_section_jpg_afb1c77479.webp">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,7 +29,7 @@
     "@context": "https://schema.org",
     "@type": "Resort",
     "name": "Orchid Tree",
-    "description": "A boutique nature estate and private retreat about 45 minutes from Whitefield, Bengaluru. Eleven rooms set in a living forest, with an ozone pool, farm and buggy rides, bonfires and stargazing.",
+    "description": "A boutique nature estate and private retreat about 45 minutes from Whitefield, Bengaluru. Eleven rooms set in a living forest, with an ozone pool, farm visits, bonfires and stargazing.",
     "url": "https://orchid-sigma.vercel.app/",
     "telephone": "+91 80882 51913",
     "email": "orchidtree.blr@gmail.com",
@@ -161,6 +161,36 @@
   .act p{color:rgba(255,255,255,.92);font-size:clamp(15px,1.5vw,19px);line-height:1.75;max-width:560px;text-shadow:0 1px 8px rgba(0,0,0,.45);}
   /* alternate the caption side for rhythm */
   .act.right .caption{margin-left:auto;text-align:left;}
+
+  /* ── the owner's act: a portrait reel beside the words, same frame as the rest ── */
+  .act.act-owner{background:#1c1813;}
+  .act-owner .ao-bg{position:absolute;inset:-30px;background-size:cover;background-position:center;
+    filter:blur(30px) brightness(.42) saturate(.9);}
+  .act-owner::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(65% 60% at 22% 40%,rgba(201,162,60,.18),transparent 64%),rgba(28,22,16,.5);}
+  .act-owner .ao-inner{position:relative;z-index:2;height:100%;display:grid;
+    grid-template-columns:auto 1fr;align-items:center;
+    gap:clamp(30px,5vw,72px);padding:clamp(28px,5vw,64px);}
+  /* the reel is sized by the act's height, not its width, so a 9:16 card
+     never outgrows the frame the rest of the timeline sits in */
+  .act-owner .ao-media{position:relative;height:100%;}
+  .act-owner .ao-media .ovcard{height:100%;width:auto;max-width:34vw;aspect-ratio:9/16;}
+  .act-owner .ao-media::before{content:"";position:absolute;inset:-14px -14px 14px 14px;
+    border:1px solid rgba(201,162,60,.45);border-radius:var(--radius);pointer-events:none;}
+  .act-owner .ao-media .ovcard{box-shadow:0 26px 64px rgba(0,0,0,.55);}
+  .act-owner .ao-words{max-width:620px;}
+  .act-owner .ao-words h2{color:#fff;font-size:clamp(28px,3.9vw,48px);line-height:1.07;margin-bottom:14px;}
+  .act-owner .ao-words p{color:rgba(255,255,255,.86);font-size:clamp(15px,1.4vw,18px);line-height:1.75;max-width:520px;}
+  .act-owner .ao-sig{font-family:var(--script);font-size:38px;color:var(--gold);line-height:1;margin-top:26px;}
+  .act-owner .ao-who{font-size:10.5px;letter-spacing:2.6px;text-transform:uppercase;font-weight:700;
+    color:rgba(255,255,255,.55);margin-top:7px;}
+  @media(max-width:820px){
+    .act.act-owner{height:auto;min-height:0;aspect-ratio:auto;}
+    .act-owner .ao-inner{grid-template-columns:1fr;gap:30px;}
+    .act-owner .ao-media{height:auto;max-width:290px;width:100%;}
+    .act-owner .ao-media .ovcard{height:auto;width:100%;max-width:none;}
+    .act-owner .ao-media::before{inset:-10px -10px 10px 10px;}
+  }
   @media (min-width:900px){
     .act.right .caption{left:auto;right:0;}
   }
@@ -357,6 +387,21 @@
     <div class="journey-rail" aria-hidden="true"></div>
     <div class="wrap">
 
+      <!-- THE OWNER — opens the day before the clock starts -->
+      <article class="act act-owner reveal" id="ownerAct">
+        <div class="ao-bg" id="ownerActBg" aria-hidden="true"></div>
+        <div class="ao-inner">
+          <div class="ao-media" id="ownerVideoSlot"></div>
+          <div class="ao-words">
+            <div class="clock"><span class="t">&mdash;</span><span class="e">Before the day starts</span></div>
+            <h2>Let the owner<br>walk you through it</h2>
+            <p>Nobody hands you a schedule here, so it helps to hear it from the person who built the place. A minute on what the hours actually feel like &mdash; then the day below is yours to read, or ignore.</p>
+            <div class="ao-sig">Orchid Tree</div>
+            <div class="ao-who">Pradeep Kuppa Swamy &middot; landscape architect, founder</div>
+          </div>
+        </div>
+      </article>
+
       <!-- MORNING -->
       <article class="act reveal">
         <img class="act-img" src="images/ozone-pool.jpg" alt="Ozone-treated swimming pool at Orchid Tree, warm and empty in the early morning" width="1600" height="1000" loading="lazy" data-slot="pool">
@@ -375,7 +420,7 @@
         <div class="caption">
           <div class="clock"><span class="t">15:00</span><span class="e">Afternoon</span></div>
           <h2>Afternoons that go nowhere</h2>
-          <p>Take the buggy down to the farm and pull a tomato off the vine. Lose an hour to carrom and a paperback. Steam, then sleep. The afternoon will not ask anything of you.</p>
+          <p>Walk down to the farm and pull a tomato off the vine. Lose an hour to carrom and a paperback. Steam, then sleep. The afternoon will not ask anything of you.</p>
         </div>
       </article>
 
@@ -510,11 +555,11 @@
         <h2>Questions about the day</h2>
       </div>
       <div class="faq-list reveal">
-        <div class="faq-item open"><button class="faq-q">What is there to do at Orchid Tree?<span class="plus">+</span></button><div class="faq-a"><p>Plenty, none of it required. Float in the ozone pool, take a buggy ride to the farm, gather around a bonfire under the stars, and play carrom, table tennis, billiards or chess. There is steam, open-sky showers, birdwatching, trails nearby, karaoke and movies in the hall. Or do nothing at all.</p></div></div>
+        <div class="faq-item open"><button class="faq-q">What is there to do at Orchid Tree?<span class="plus">+</span></button><div class="faq-a"><p>Plenty, none of it required. Float in the ozone pool, visit the farm, gather around a bonfire under the stars, and play carrom, table tennis, billiards or chess. There is steam, open-sky showers, birdwatching, trails nearby, karaoke and movies in the hall. Or do nothing at all.</p></div></div>
         <div class="faq-item"><button class="faq-q">What's included in the stay?<span class="plus">+</span></button><div class="faq-a"><p>Your room, breakfast each morning, and the run of the estate: the ozone pool, the steam room and open-sky showers, the millet snack station, indoor games, the open-air gym and the BYOB lounge. Lunch, dinner and a massage can be added separately.</p></div></div>
         <div class="faq-item"><button class="faq-q">Is there a swimming pool?<span class="plus">+</span></button><div class="faq-a"><p>Yes, an ozone-treated swimming pool, open to all guests through your stay. It is at its best early, before the day finds it.</p></div></div>
         <div class="faq-item"><button class="faq-q">Are meals included?<span class="plus">+</span></button><div class="faq-a"><p>Breakfast is included with every stay. Lunch and dinner are a la carte from the on-site restaurant, cooked fresh to order, so we ask you to pre-order before you arrive. Orchid Tree is proudly BYOB.</p></div></div>
-        <div class="faq-item"><button class="faq-q">Is Orchid Tree good for families with kids?<span class="plus">+</span></button><div class="faq-a"><p>Yes. The trampoline, games, farm visit and buggy rides keep children busy, and the Family Rooms and Chandana, the family cottage, are made for families and groups, with flexible bedding for children eight and under.</p></div></div>
+        <div class="faq-item"><button class="faq-q">Is Orchid Tree good for families with kids?<span class="plus">+</span></button><div class="faq-a"><p>Yes. The trampoline, games and farm visit keep children busy, and the Family Rooms and Chandana, the family cottage, are made for families and groups, with flexible bedding for children eight and under.</p></div></div>
         <div class="faq-item"><button class="faq-q">How far is it from Bangalore?<span class="plus">+</span></button><div class="faq-a"><p>About forty-five minutes from Whitefield, in Bangalore Rural near Hoskote, and roughly an hour from Kempegowda International Airport. The exact location is shared once your stay is confirmed, to keep the estate private.</p></div></div>
       </div>
     </div>
@@ -570,6 +615,21 @@
   <!-- compact booking CTA that follows after the hero -->
   <a class="book-fab" id="bookFab" href="https://wa.me/918088251913?text=Hi%20Orchid%20Tree%2C%20I%27d%20like%20to%20enquire%20about%20a%20stay." target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.2 1.1-1.7 1.2-.4.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.5-2.6-1.1-4.3-3.8-4.5-4-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.7.7 1.8.1.1.1.3 0 .4l-.3.5c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.2.1.4.2.5.3.1.2.1.5-.1 1z"/></svg> WhatsApp</a>
 
+  <script src="shared/media.js"></script>
+  <script src="shared/video.js"></script>
+  <script>
+  // the owner opens the journey, ahead of the 06:30 card
+  (function(){
+    var slot = document.getElementById('ownerVideoSlot');
+    var v = window.OrchidMedia && OrchidMedia.owner('experiences');
+    if(!slot) return;
+    if(!v){ var act = document.getElementById('ownerAct'); if(act) act.remove(); return; }
+    slot.innerHTML = OrchidVideo.card(v, { ratio:'portrait', badge:'The owner' });
+    OrchidVideo.bind(slot);
+    var bg = document.getElementById('ownerActBg');
+    if(bg && v.poster) bg.style.backgroundImage = "url('" + v.poster + "')";
+  })();
+  </script>
   <script>
   (function(){
     function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -605,7 +665,7 @@
     // Every tile uses a real Orchid Tree property photo (no random internet images)
     var SHORTS = [
       { lbl:'Ozone pool',                 img:'images/ozone-pool.jpg' },
-      { lbl:'Farm visit & buggy ride',    img:U+'Experience_section_jpg_afb1c77479.webp' },
+      { lbl:'Farm visit',                 img:U+'Experience_section_jpg_afb1c77479.webp' },
       { lbl:'Bonfire & stargazing',       img:U+'Image_6_1024x1536_bk_923d98c089.jpg' },
       { lbl:'Steam & open-sky showers',   img:U+'Image8_scaled_jpg_ec00384f49.webp' },
       { lbl:'Karaoke & music corner',     img:U+'Copy_of_2_a5beee287f.jpg' },
@@ -686,6 +746,9 @@
     })();
   })();
   </script>
+
+  <script src="shared/nav.js" defer></script>
+
 
 </body>
 </html>

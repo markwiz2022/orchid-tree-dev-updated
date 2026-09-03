@@ -144,8 +144,12 @@
   .short{position:relative;flex:0 0 340px;height:500px;border-radius:var(--radius);overflow:hidden;scroll-snap-align:start;}
   /* image is wider than the card so it can pan; JS drives the parallax on scroll */
   .short .ph{position:absolute;top:0;bottom:0;left:0;width:132%;background-size:cover;background-position:center;will-change:transform;}
+  .short .ph-empty{background-color:var(--media,#e7e1d4);background-image:repeating-linear-gradient(135deg,rgba(140,130,117,.12) 0 2px,transparent 2px 9px);}
   .short .scrim{position:absolute;inset:0;background:linear-gradient(to top,rgba(40,33,25,.72),transparent 60%);}
   .short .lbl{position:absolute;left:0;bottom:0;padding:22px;color:#fff;font-size:13px;font-weight:600;font-family:var(--sans);text-transform:uppercase;letter-spacing:2.5px;line-height:1.4;text-shadow:0 1px 8px rgba(0,0,0,.55);z-index:2;}
+  /* the owner's video sits in the first slot of the carousel, filling the card */
+  .short-owner{background:transparent;}
+  .short-owner .ovcard{height:100%;border-radius:var(--radius);}
   .shorts-fade{position:absolute;top:0;right:0;bottom:14px;width:70px;pointer-events:none;background:linear-gradient(to right,rgba(247,243,234,0),var(--cream));}
   .brand + section .shorts-fade,.incl .shorts-fade{background:linear-gradient(to right,rgba(255,255,255,0),var(--card));}
   .carousel-nav{display:flex;gap:10px;}
@@ -160,14 +164,64 @@
   .tier{margin-top:64px;}
   .tier .tier-label{text-align:center;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:8px;}
   .tier .tier-note{text-align:center;color:var(--body);font-size:14px;margin-bottom:30px;font-style:italic;font-family:var(--serif);}
-  .room-grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;}
-  .room{border-radius:var(--radius);overflow:hidden;background:var(--card);box-shadow:0 4px 20px rgba(67,56,43,.06);cursor:pointer;transition:box-shadow .3s ease,transform .3s ease;}
+  /* Horizontal cards, two per row: a true 9:16 panel for the reel, the copy
+     beside it. The reel drives the card height, so it is never cropped. */
+  .room-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:26px;}
+  .room{display:grid;grid-template-columns:clamp(160px,38%,212px) minmax(0,1fr);
+    border-radius:var(--radius);overflow:hidden;background:var(--card);box-shadow:0 4px 20px rgba(67,56,43,.06);cursor:pointer;transition:box-shadow .3s ease,transform .3s ease;}
   .room:hover{box-shadow:0 16px 40px rgba(67,56,43,.14);transform:translateY(-3px);}
-  .room .media{position:relative;height:320px;}
+  /* the reel column is a true 9:16 and sets the height of the whole card */
+  .room .media{position:relative;aspect-ratio:9/16;width:100%;height:auto;}
   .room .media .rmh{position:absolute;inset:0;background-color:#e7e1d4;background-size:cover;background-position:center;background-repeat:no-repeat;transition:opacity .8s ease,transform .7s ease;}
   .room .media .rmh-top{opacity:0;}
   .room:hover .media .rmh{transform:scale(1.06);}
   .room .media .rcount{position:absolute;top:14px;right:14px;z-index:3;background:rgba(20,16,12,.45);color:#fff;font-size:10px;font-weight:700;letter-spacing:.5px;padding:5px 10px;border-radius:20px;}
+  /* ── the reel fills the card ───────────────────────────────────────────────
+     Card frame and reel are both 9:16, so this is a native fit: no crop, no
+     letterbox, no pip. The photographs move to the popup, where they get shown
+     landscape at full width instead of being squeezed into a portrait slot. */
+  .room .media .rpanel{position:absolute;inset:0;z-index:5;overflow:hidden;background:#8c8275;}
+  .room .media .rpanel img,.room .media .rpanel video{position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;transition:opacity .45s ease,transform .8s ease;}
+  .room .media .rpanel video{opacity:0;}
+  .room:hover .media .rpanel video{opacity:1;}
+  .room:hover .media .rpanel img{transform:scale(1.05);}
+  .room .media .rpanel::after{content:"";position:absolute;inset:0;
+    background:linear-gradient(to top,rgba(20,16,12,.66),transparent 46%,rgba(20,16,12,.3));}
+  .room .media .rpanel .pplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
+    width:62px;height:62px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.78);
+    -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);box-shadow:0 6px 22px rgba(0,0,0,.32);
+    transition:background .25s ease,border-color .25s ease,transform .25s ease;}
+  .room:hover .media .rpanel .pplay{background:var(--gold);border-color:var(--gold);transform:translate(-50%,-50%) scale(1.07);}
+  .room .media .rpanel .pplay svg{width:20px;height:20px;fill:#fff;margin-left:2px;}
+  .room .media .rpanel .plbl{position:absolute;left:0;right:0;bottom:16px;z-index:2;text-align:center;
+    font-size:9.5px;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;color:#fff;
+    text-shadow:0 1px 6px rgba(0,0,0,.75);}
+  /* the tier the room belongs to, small, top-left of the reel */
+  .room .media .rzone{position:absolute;left:14px;top:14px;z-index:6;
+    background:rgba(255,255,255,.93);color:var(--ink);font-size:9px;font-weight:700;letter-spacing:1.8px;
+    text-transform:uppercase;padding:5px 10px;border-radius:20px;box-shadow:0 2px 9px rgba(0,0,0,.16);}
+  /* the copy sits beside the reel, vertically centred against it */
+  .room .body{display:flex;flex-direction:column;justify-content:center;
+    padding:clamp(22px,2.5vw,32px);max-width:none;}
+  .room h3{font-size:clamp(20px,1.9vw,26px);line-height:1.18;margin-bottom:7px;}
+  .room .names{font-size:11.5px;letter-spacing:1.2px;margin-bottom:14px;}
+  .room .desc{font-size:14.5px;line-height:1.65;margin-bottom:18px;}
+  .room .foot{flex-wrap:wrap;gap:10px;padding-top:16px;}
+  .room .sleeps{font-size:11px;}
+  /* one card per row before the copy column gets squeezed */
+  @media(max-width:1000px){
+    .room-grid{grid-template-columns:1fr;}
+    .room{grid-template-columns:clamp(200px,26%,260px) minmax(0,1fr);}
+    .room .desc{font-size:15.5px;max-width:56ch;}
+  }
+  @media(max-width:640px){
+    /* stack: reel on top at a friendlier 4:5, copy beneath */
+    .room{grid-template-columns:1fr;}
+    .room .media{aspect-ratio:4/5;}
+    .room .body{padding:24px 22px 26px;}
+  }
   .room .body{padding:26px;}
   .room h3{font-size:23px;margin-bottom:4px;}
   .room .names{font-size:12px;letter-spacing:1px;color:var(--media-tx);text-transform:uppercase;margin-bottom:12px;}
@@ -193,6 +247,7 @@
   /* INCLUDED */
   .incl{background:var(--card);}
   .incl-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:0;}
+  .incl-cols.one{grid-template-columns:minmax(0,460px);}
   .incl-col{border:1px solid var(--line);border-radius:var(--radius);padding:30px;}
   .incl-col h3{font-size:18px;margin-bottom:16px;}
   .incl-col.in h3{color:var(--green);}
@@ -316,8 +371,15 @@
   /* ── rich room modal (ported from guest.html) ── */
   .overlay{display:none;position:fixed;inset:0;background:rgba(67,56,43,.5);z-index:60;align-items:center;justify-content:center;padding:24px;}
   .overlay.open{display:flex;}
-  .modal{background:var(--card);max-width:660px;width:100%;max-height:92vh;overflow:auto;border-radius:var(--radius);box-shadow:0 24px 70px rgba(0,0,0,.34);}
-  .modal-body{padding:40px;}
+  .overlay{padding:clamp(12px,3vw,40px);}
+  .modal{background:var(--card);max-width:1180px;width:100%;max-height:94vh;overflow:auto;border-radius:var(--radius);box-shadow:0 24px 70px rgba(0,0,0,.34);}
+  .modal-body{padding:clamp(26px,3.2vw,46px);}
+  /* head runs the full width; the detail below splits into two columns */
+  .modal-body .mb-head{margin-bottom:26px;}
+  .modal-body .mb-cols{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,1fr);gap:clamp(28px,3.4vw,52px);align-items:start;}
+  .modal-body .mb-right{position:sticky;top:0;border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px;background:var(--cream);}
+  .modal-body h2{font-size:clamp(28px,3vw,40px);}
   .modal-body .close{float:right;cursor:pointer;border:1px solid var(--ink);background:transparent;color:var(--ink);padding:8px 16px;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;border-radius:var(--radius-sm);}
   .modal-body .close:hover{background:var(--ink);color:#fff;}
   .modal-body .tagline{font-family:var(--serif);font-style:italic;font-size:17px;color:var(--body);margin:2px 0 16px;}
@@ -336,7 +398,7 @@
   .setting-band.pool .sb-title{color:#1f6f8b;}
   .setting-band.garden .sb-title{color:#3f7d4e;}
   .setting-band .sb-text{font-size:14px;color:var(--ink);line-height:1.55;}
-  .rmodal-main{position:relative;height:340px;background-color:#8c8275;overflow:hidden;}
+  .rmodal-main{position:relative;height:clamp(360px,62vh,620px);background-color:#8c8275;overflow:hidden;}
   .rmodal-main .rm-img{position:absolute;inset:0;background-color:#e7e1d4;background-size:cover;background-position:center;background-repeat:no-repeat;transition:opacity .8s ease;}
   .rmodal-main .rm-top{opacity:0;}
   .rm-zone{position:absolute;top:16px;left:16px;z-index:3;}
@@ -346,12 +408,48 @@
   .rm-nav.prev{left:14px;}
   .rm-nav.next{right:14px;}
   .rm-count{position:absolute;bottom:12px;right:14px;z-index:3;background:rgba(20,16,12,.5);color:#fff;font-size:11px;font-weight:700;letter-spacing:.5px;padding:4px 11px;border-radius:20px;}
-  .rmodal-thumbs{display:flex;gap:8px;padding:12px 14px 0;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#cdc4b2 transparent;}
+  .rmodal-thumbs{display:flex;gap:10px;padding:14px clamp(18px,2.6vw,34px) 0;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#cdc4b2 transparent;}
   .rmodal-thumbs::-webkit-scrollbar{height:6px;}
   .rmodal-thumbs::-webkit-scrollbar-thumb{background:#cdc4b2;border-radius:6px;}
-  .rmodal-thumbs .th{flex:0 0 66px;height:48px;border-radius:6px;background-color:#e7e1d4;background-size:cover;background-position:center;cursor:pointer;opacity:.55;border:2px solid transparent;transition:opacity .15s,border-color .15s;}
+  .rmodal-thumbs .th{position:relative;flex:0 0 104px;height:74px;border-radius:6px;background-color:#e7e1d4;background-size:cover;background-position:center;cursor:pointer;opacity:.55;border:2px solid transparent;transition:opacity .15s,border-color .15s;}
   .rmodal-thumbs .th:hover{opacity:.85;}
   .rmodal-thumbs .th.active{opacity:1;border-color:var(--green);}
+  /* a video thumb carries a play glyph so the reels read apart from the stills */
+  .rmodal-thumbs .th.is-video::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    border-style:solid;border-width:8px 0 8px 13px;border-color:transparent transparent transparent #fff;
+    filter:drop-shadow(0 1px 4px rgba(0,0,0,.75));}
+  .rmodal-thumbs .th.is-video{background-color:#8c8275;}
+
+  /* ── video inside the room modal ── */
+  /* a portrait reel is contained (never cropped) over a blurred copy of its
+     own poster — in a 620px frame that's a 349px-wide 9:16 reel */
+  .rmodal-main.has-video{background:#161310;}
+  .rmodal-main .rm-blur{position:absolute;inset:-24px;z-index:1;background-size:cover;background-position:center;
+    filter:blur(26px) brightness(.55);opacity:0;transition:opacity .4s ease;}
+  .rmodal-main.has-video .rm-blur{opacity:1;}
+  .rmodal-main .rm-video{position:absolute;inset:0;z-index:2;width:100%;height:100%;object-fit:contain;display:none;background:transparent;}
+  .rmodal-main.has-video .rm-video{display:block;}
+  .rmodal-main.has-video .rm-img{opacity:0!important;}
+  .rmodal-main .rm-vplay{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;width:62px;height:62px;
+    border-radius:50%;display:none;align-items:center;justify-content:center;cursor:pointer;
+    background:rgba(255,255,255,.16);border:1.5px solid rgba(255,255,255,.72);
+    -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 6px 22px rgba(0,0,0,.3);
+    transition:background .22s ease,border-color .22s ease,transform .22s ease;}
+  .rmodal-main.has-video .rm-vplay{display:flex;}
+  .rmodal-main .rm-vplay:hover{background:var(--gold);border-color:var(--gold);transform:translate(-50%,-50%) scale(1.06);}
+  .rmodal-main .rm-vplay svg{width:20px;height:20px;fill:#fff;margin-left:2px;}
+  .rmodal-main.playing .rm-vplay{display:none;}
+  .rm-expand{position:absolute;bottom:12px;left:14px;z-index:4;display:none;align-items:center;gap:7px;cursor:pointer;
+    background:rgba(20,16,12,.5);color:#fff;border:none;font-family:var(--sans);font-size:10px;font-weight:700;
+    letter-spacing:1.6px;text-transform:uppercase;padding:6px 12px;border-radius:20px;transition:background .18s;}
+  .rm-expand:hover{background:rgba(20,16,12,.78);}
+  .rmodal-main.has-video .rm-expand{display:inline-flex;}
+  .rm-vlabel{position:absolute;top:16px;right:16px;z-index:4;display:none;align-items:center;gap:6px;
+    background:rgba(255,255,255,.94);color:var(--ink);font-size:9.5px;font-weight:700;letter-spacing:2px;
+    text-transform:uppercase;padding:6px 11px;border-radius:20px;box-shadow:0 2px 10px rgba(0,0,0,.16);}
+  .rm-vlabel .dot{width:5px;height:5px;border-radius:50%;background:var(--gold);}
+  .rmodal-main.has-video .rm-vlabel{display:inline-flex;}
+  .rmodal-main.has-video .rm-count{display:none!important;}
   .facts{display:grid;grid-template-columns:1fr 1fr;gap:0 32px;margin-top:14px;}
   .facts .f{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);font-size:13px;}
   .facts .f .k{color:var(--media-tx);}
@@ -385,7 +483,15 @@
   .rc-note{font-size:12.5px;color:var(--body);margin:12px 0 18px;line-height:1.5;}
   .rc-submit{display:block;width:100%;text-align:center;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);padding:16px 18px;font-size:12px;letter-spacing:1.6px;text-transform:uppercase;font-weight:700;cursor:pointer;transition:background .18s;font-family:var(--sans);}
   .rc-submit:hover{background:#2c3810;}
-  @media(max-width:560px){ .modal-body{padding:26px 22px;} .facts{grid-template-columns:1fr;} .rmodal-main{height:230px;} }
+  @media(max-width:900px){
+    .modal-body .mb-cols{grid-template-columns:1fr;gap:30px;}
+    .modal-body .mb-right{position:static;}
+  }
+  @media(max-width:560px){
+    .modal-body{padding:26px 22px;} .facts{grid-template-columns:1fr;}
+    .rmodal-main{height:clamp(260px,44vh,340px);}
+    .rmodal-thumbs .th{flex:0 0 78px;height:56px;}
+  }
 </style>
 </head>
 <body>
@@ -498,7 +604,7 @@
       <div class="txt">
         <div class="eyebrow">A day here</div>
         <h2>Mornings you don't set an alarm for</h2>
-        <p class="muted">The day starts with birdsong and a breakfast you didn't have to plan. After that, the hours are yours. Float in the ozone pool until your fingers wrinkle. Take the buggy down to the farm and pull a tomato off the vine. Lose an afternoon to carrom and a paperback. As the light drops, there's a bonfire, a sky thick with stars, and your own bottle poured slowly. Do all of it. Do none of it. Both are the right answer here.</p>
+        <p class="muted">The day starts with birdsong and a breakfast you didn't have to plan. After that, the hours are yours. Float in the ozone pool until your fingers wrinkle. Walk down to the farm and pull a tomato off the vine. Lose an afternoon to carrom and a paperback. As the light drops, there's a bonfire, a sky thick with stars, and your own bottle poured slowly. Do all of it. Do none of it. Both are the right answer here.</p>
       </div>
     </div>
 
@@ -590,24 +696,16 @@
       <div class="txt">
         <div class="eyebrow">What's included</div>
         <h2>Everything you need, nothing you don't</h2>
-        <p class="muted" style="margin-bottom:28px;">Your room comes with breakfast, the run of the estate, and every amenity. Lunch and dinner are cooked fresh at our restaurant, so we ask you to pre-order, the kitchen cooks to your table, not to a buffet bin. Bring your own bottle; we'll pour it under the stars.</p>
-        <div class="incl-cols">
+        <p class="muted" style="margin-bottom:28px;">Your room charge includes all meals prepared to your preference, full access to the estate, and one full-body massage, while accompanying guests enjoy a traditional Kansa foot massage.</p>
+        <div class="incl-cols one">
           <div class="incl-col in">
             <h3>Included with your stay</h3>
             <ul>
-              <li>Your room</li>
-              <li>Breakfast</li>
-              <li>Activities across the estate</li>
-              <li>Pool, steam, games and amenities</li>
-            </ul>
-          </div>
-          <div class="incl-col out">
-            <h3>From the restaurant</h3>
-            <ul>
-              <li>Lunch, freshly cooked (pre-order)</li>
-              <li>Dinner, freshly cooked (pre-order)</li>
-              <li>A massage, whenever you like</li>
-              <li>Proudly BYOB, enjoy your own</li>
+              <li>Three farm-to-fork organic meals</li>
+              <li>In-room pantry with ragi &amp; millet snacks, teas and coffees</li>
+              <li>Kansa foot massage + head massage for every guest</li>
+              <li>Ozone pool, steam room &amp; full estate access</li>
+              <li>Fresh linen, enzyme-washed in-house</li>
             </ul>
           </div>
         </div>
@@ -723,28 +821,42 @@
   <div class="overlay" id="overlay" onclick="if(event.target===this)closeRoom()">
     <div class="modal">
       <div class="rmodal-main" id="mMain">
+        <div class="rm-blur" id="mBlur"></div>
         <div class="rm-img rm-base"></div>
         <div class="rm-img rm-top"></div>
+        <video class="rm-video" id="mVid" playsinline preload="metadata"></video>
         <div class="rm-zone" id="mZone"></div>
+        <span class="rm-vlabel" id="mVlabel"><i class="dot"></i><span></span></span>
+        <button class="rm-vplay" id="mVplay" type="button" aria-label="Play video"></button>
+        <button class="rm-expand" id="mExpand" type="button">Full screen</button>
         <button class="rm-nav prev" id="mPrev" aria-label="Previous photo">&lsaquo;</button>
         <button class="rm-nav next" id="mNext" aria-label="Next photo">&rsaquo;</button>
         <div class="rm-count" id="mCount"></div>
       </div>
       <div class="rmodal-thumbs" id="mThumbs"></div>
       <div class="modal-body">
-        <button class="close" onclick="closeRoom()">Close</button>
-        <div class="eyebrow" id="mCat"></div>
-        <h2 id="mTitle"></h2>
-        <div class="tagline" id="mTagline"></div>
+        <div class="mb-head">
+          <button class="close" onclick="closeRoom()">Close</button>
+          <div class="eyebrow" id="mCat"></div>
+          <h2 id="mTitle"></h2>
+          <div class="tagline" id="mTagline"></div>
+        </div>
+
+        <!-- two columns on a wide modal: the room on the left, booking on the right -->
+        <div class="mb-cols">
+        <div class="mb-left">
         <div id="mSetting"></div>
         <p class="story" id="mStory"></p>
         <p class="muted" id="mDesc" style="margin-top:8px;"></p>
-        <div class="price" id="mPrice"></div>
         <div class="eyebrow" style="margin-top:24px;">The room</div>
         <div class="facts" id="mFacts"></div>
         <div class="eyebrow" style="margin-top:24px;">What this place offers</div>
         <div class="amen-list" id="mOffers"></div>
         <div id="mAsk"></div>
+        </div>
+
+        <div class="mb-right">
+        <div class="price" id="mPrice"></div>
 
         <!-- booking CTA → requirement collector for THIS room -->
         <div class="rbook">
@@ -787,12 +899,16 @@
             <button type="button" class="rc-submit" id="rcSubmit">See availability &rarr;</button>
           </div>
         </div>
+        </div><!-- /.mb-right -->
+        </div><!-- /.mb-cols -->
       </div>
     </div>
   </div>
 
   <script src="shared/catalog.js"></script>
   <script src="shared/content.js"></script>
+  <script src="shared/media.js"></script>
+  <script src="shared/video.js"></script>
   <script>
   (function(){
     var C = window.OrchidCatalog, CT = window.OrchidContent;
@@ -979,19 +1095,43 @@
 
     // ---- EXPERIENCES shorts (built from real photos) ----
     var U = 'https://orchidtree.in/uploads/';
+    // Order is fixed by the property; do not re-sort. Entries with img:null are
+    // awaiting their photo and render on the textured placeholder until one lands.
     var SHORTS = [
-      { lbl:'Ozone pool', img:'images/ozone-pool.jpg' },
-      { lbl:'Farm visit & buggy ride', img:U+'Image8_scaled_jpg_ec00384f49.webp' },
-      { lbl:'Bonfire & stargazing', img:U+'Experience_section_jpg_afb1c77479.webp' },
-      { lbl:'Steam & deep rest', img:U+'bodhi_tree_5c9ce0f7ce.webp' },
-      { lbl:'Karaoke & music corner', img:U+'Copy_of_2_a5beee287f.jpg' },
-      { lbl:'Trampoline & games', img:U+'Image_6_1024x1536_bk_923d98c089.jpg' },
-      { lbl:'Birdwatching & trails', img:U+'chandana_2_00966a14a0.png' },
-      { lbl:'Movies in the hall', img:U+'datura_1_a0ba781d1b.png' },
+      { lbl:'Ozone pool',              img:'images/ozone-pool.jpg' },
+      { lbl:'Steam room',              img:U+'bodhi_tree_5c9ce0f7ce.webp' },
+      { lbl:'Head massage',            img:null },
+      { lbl:'Leg massage',             img:null },
+      { lbl:'Farm visit',              img:U+'Image8_scaled_jpg_ec00384f49.webp' },
+      { lbl:'Meet our pets',           img:null },
+      { lbl:'Bonfire',                 img:U+'Experience_section_jpg_afb1c77479.webp' },
+      { lbl:'Stargazing',              img:null },
+      { lbl:'Bird watching',           img:U+'chandana_2_00966a14a0.png' },
+      { lbl:'Anniversary celebration', img:null },
+      { lbl:'Birthday celebration',    img:null },
+      { lbl:'Billiards',               img:null },
+      { lbl:'Trampoline',              img:U+'Image_6_1024x1536_bk_923d98c089.jpg' },
+      { lbl:'Movie in the hall',       img:U+'datura_1_a0ba781d1b.png' },
+      { lbl:'Karaoke',                 img:U+'Copy_of_2_a5beee287f.jpg' },
+      { lbl:'Chess',                   img:null },
+      { lbl:'Carrom',                  img:null },
+      { lbl:'Book reading',            img:null },
     ];
-    document.getElementById('expShorts').innerHTML = SHORTS.map(function(s){
-      return '<div class="short"><div class="ph" style="background-image:url(\''+esc(s.img)+'\')"></div><div class="scrim"></div><div class="lbl">'+esc(s.lbl)+'</div></div>';
+    // the owner's video leads the carousel, then the photo shorts follow
+    var expHtml = SHORTS.map(function(s){
+      var ph = s.img
+        ? '<div class="ph" style="background-image:url(\''+esc(s.img)+'\')"></div>'
+        : '<div class="ph ph-empty"></div>';
+      return '<div class="short">'+ph+'<div class="scrim"></div><div class="lbl">'+esc(s.lbl)+'</div></div>';
     }).join('');
+    var ownerHome = window.OrchidMedia && OrchidMedia.owner('home');
+    if(ownerHome){
+      expHtml = '<div class="short short-owner">' +
+        OrchidVideo.card(ownerHome, { ratio:'cover', badge:'The owner', showBlurb:true }) +
+        '</div>' + expHtml;
+    }
+    document.getElementById('expShorts').innerHTML = expHtml;
+    if(window.OrchidVideo) OrchidVideo.bind(document.getElementById('expShorts'));
     (function(){
       var sh=document.getElementById('expShorts'), nav=document.getElementById('expNav'), fade=document.getElementById('expFade');
       var prev=document.getElementById('expPrev'), next=document.getElementById('expNext');
@@ -1038,9 +1178,45 @@
       var urls = (r.imageUrls||[]).slice();
       var base = card.querySelector('.rmh-base'), top = card.querySelector('.rmh-top');
       if(urls[0]) base.style.backgroundImage = "url('"+urls[0]+"')";
-      // photo count badge
-      if(urls.length>1){ var b=document.createElement('div'); b.className='rcount'; b.textContent=urls.length+' photos'; card.querySelector('.media').appendChild(b); }
-      if(urls.length<2) return;
+      var mediaBox = card.querySelector('.media');
+
+      // ── the reel fills the card ──
+      // Card and reel are both 9:16, so the reel simply fills the frame. The
+      // photographs are not squeezed in alongside it — they live in the popup,
+      // where a landscape photo can be shown landscape.
+      var reel = window.OrchidMedia && OrchidMedia.roomVideo(r);
+      if(reel){
+        var panel = document.createElement('div');
+        panel.className = 'rpanel';
+        panel.innerHTML =
+          '<img src="' + esc(reel.poster || urls[0] || '') + '" alt="" loading="lazy" decoding="async">' +
+          (reel.src ? '<video src="' + esc(reel.src) + '" muted loop playsinline preload="none"></video>' : '') +
+          '<span class="pplay">' + OrchidVideo.PLAY_SVG + '</span>' +
+          '<span class="plbl">' + (reel.src ? 'Room tour' : 'Tour soon') + '</span>';
+        mediaBox.appendChild(panel);
+
+        // which tier this room sits in, read off the card's own section
+        var tierEl = card.closest('.tier') && card.closest('.tier').querySelector('.tier-label');
+        if(tierEl){
+          var z = document.createElement('div');
+          z.className = 'rzone'; z.textContent = tierEl.textContent;
+          mediaBox.appendChild(z);
+        }
+
+        card._reelVid = panel.querySelector('video');
+        card.addEventListener('mouseenter', function(){
+          if(card._reelVid){ try{ card._reelVid.currentTime=0; card._reelVid.play(); }catch(e){} }
+        });
+        card.addEventListener('mouseleave', function(){
+          if(card._reelVid){ try{ card._reelVid.pause(); }catch(e){} }
+        });
+      }
+
+      // photo count badge — signals that the popup holds the full gallery
+      if(urls.length>1){ var b=document.createElement('div'); b.className='rcount'; b.textContent=urls.length+' photos'; b.style.zIndex='6'; mediaBox.appendChild(b); }
+
+      // no reel: fall back to the photo crossfade in the same portrait frame
+      if(reel || urls.length<2) return;
       var cur=0, idx=0, loaded=false;
       function preload(){ if(loaded) return; loaded=true; urls.forEach(function(u){ var im=new Image(); im.src=u; }); }
       function tick(){
@@ -1099,47 +1275,93 @@
     var WA_NUM = (CT && CT.contact && CT.contact.whatsapp) || '918088251913';
     function waLink(msg){ return 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg); }
 
-    // ---- gallery (crossfade + thumbs + autoplay) ----
+    // ---- gallery: the room's reel, then the owner, then the photographs ----
+    // Items are { kind:'video'|'image', src, poster, portrait, label, ready }.
+    // Videos render into #mVid (contained, over a blurred poster); photos keep
+    // the original two-layer crossfade. Autoplay only advances through photos —
+    // it never skips off a video mid-play.
     function roomUrls(r){ return (r.imageUrls && r.imageUrls.length) ? r.imageUrls : (r.imageUrl ? [r.imageUrl] : []); }
-    var MG = { urls: [], i: 0, cur: 0, timer: null };
+    var MG = { items: [], i: 0, cur: 0, timer: null };
     function mgLayers(){ return [document.querySelector('#mMain .rm-base'), document.querySelector('#mMain .rm-top')]; }
     function mgGo(target){
-      var n = MG.urls.length; if(!n) return;
+      var n = MG.items.length; if(!n) return;
       target = (target + n) % n; MG.i = target;
-      var layers = mgLayers(), incoming = layers[1 - MG.cur];
-      incoming.style.backgroundImage = "url('" + MG.urls[target] + "')";
-      incoming.style.opacity = '1';
-      layers[MG.cur].style.opacity = '0';
-      MG.cur = 1 - MG.cur;
+      var it = MG.items[target], main = el('mMain'), vid = el('mVid');
+
+      if(it.kind === 'video'){
+        main.classList.add('has-video');
+        main.classList.remove('playing');
+        el('mBlur').style.backgroundImage = it.poster ? "url('" + it.poster + "')" : '';
+        vid.pause();
+        vid.poster = it.poster || '';
+        if(it.src && vid.getAttribute('src') !== it.src){ vid.setAttribute('src', it.src); }
+        if(!it.src){ vid.removeAttribute('src'); vid.load(); }
+        vid.controls = false;
+        var lbl = el('mVlabel'); lbl.lastElementChild.textContent = it.ready ? (it.label || 'Video') : 'Coming soon';
+        el('mVplay').style.display = it.ready ? 'flex' : 'none';
+      } else {
+        main.classList.remove('has-video','playing');
+        try{ el('mVid').pause(); }catch(e){}
+        var layers = mgLayers(), incoming = layers[1 - MG.cur];
+        incoming.style.backgroundImage = "url('" + it.src + "')";
+        incoming.style.opacity = '1';
+        layers[MG.cur].style.opacity = '0';
+        MG.cur = 1 - MG.cur;
+      }
+
       var cnt = el('mCount'); if(cnt) cnt.textContent = (target + 1) + ' / ' + n;
       var thumbs = el('mThumbs');
       if(thumbs){ var a = thumbs.querySelector('.th.active'); if(a) a.classList.remove('active');
         var t = thumbs.querySelector('.th[data-i="' + target + '"]'); if(t) t.classList.add('active'); }
     }
-    function mgTimer(){ clearInterval(MG.timer); MG.timer = null; if(MG.urls.length > 1) MG.timer = setInterval(function(){ mgGo(MG.i + 1); }, 3200); }
-    function mgStop(){ clearInterval(MG.timer); MG.timer = null; }
-    function mgStart(urls){
-      mgStop(); MG.urls = urls || []; MG.i = 0; MG.cur = 0;
+    function mgTimer(){
+      clearInterval(MG.timer); MG.timer = null;
+      // don't auto-advance while a video is on screen — let it be watched
+      if(MG.items.length > 1 && MG.items[MG.i].kind !== 'video'){
+        MG.timer = setInterval(function(){ mgGo(MG.i + 1); }, 3200);
+      }
+    }
+    function mgStop(){ clearInterval(MG.timer); MG.timer = null; try{ el('mVid').pause(); }catch(e){} }
+    function mgStart(items){
+      mgStop(); MG.items = items || []; MG.i = 0; MG.cur = 0;
       var layers = mgLayers();
-      layers[0].style.backgroundImage = urls[0] ? "url('" + urls[0] + "')" : ''; layers[0].style.opacity = '1';
+      layers[0].style.backgroundImage = ''; layers[0].style.opacity = '1';
       layers[1].style.backgroundImage = ''; layers[1].style.opacity = '0';
-      urls.forEach(function(u){ var im = new Image(); im.src = u; });
-      var multi = urls.length > 1;
+      MG.items.forEach(function(it){ if(it.kind === 'image'){ var im = new Image(); im.src = it.src; } });
+
+      var multi = MG.items.length > 1;
       el('mPrev').style.display = multi ? '' : 'none';
       el('mNext').style.display = multi ? '' : 'none';
       el('mCount').style.display = multi ? '' : 'none';
-      el('mCount').textContent = '1 / ' + urls.length;
+
       var thumbs = el('mThumbs');
       thumbs.innerHTML = multi
-        ? urls.map(function(u, i){ return '<div class="th' + (i === 0 ? ' active' : '') + '" data-i="' + i + '" style="background-image:url(\'' + esc(u) + '\')"></div>'; }).join('')
+        ? MG.items.map(function(it, i){
+            return '<div class="th' + (i === 0 ? ' active' : '') + (it.kind === 'video' ? ' is-video' : '') +
+              '" data-i="' + i + '" title="' + esc(it.label || '') + '"' +
+              ' style="background-image:url(\'' + esc(it.poster || it.src) + '\')"></div>';
+          }).join('')
         : '';
       Array.prototype.forEach.call(thumbs.querySelectorAll('.th'), function(th){
         th.addEventListener('click', function(){ mgGo(+th.getAttribute('data-i')); mgTimer(); });
       });
+      mgGo(0);
       mgTimer();
     }
     el('mPrev').addEventListener('click', function(){ mgGo(MG.i - 1); mgTimer(); });
     el('mNext').addEventListener('click', function(){ mgGo(MG.i + 1); mgTimer(); });
+
+    // play inline; or hand off to the full-screen player, which sizes 9:16 properly
+    el('mVplay').innerHTML = OrchidVideo.PLAY_SVG;
+    el('mVplay').addEventListener('click', function(){
+      var v = el('mVid'); if(!v.getAttribute('src')) return;
+      mgStop(); el('mMain').classList.add('playing');
+      v.controls = true; v.play();
+    });
+    el('mVid').addEventListener('ended', function(){ el('mMain').classList.remove('playing'); });
+    el('mExpand').addEventListener('click', function(){
+      if(window.OrchidVideo) OrchidVideo.open(MG.items, MG.i);
+    });
 
     // ---- requirement collector (dates + guests → book-packages for THIS room) ----
     var currentRoomId = null;
@@ -1230,7 +1452,10 @@
       if(r.priceFrom){ priceEl.style.display=''; priceEl.textContent = 'From ' + rupees(r.priceFrom) + ' + taxes per night.'; }
       else { priceEl.style.display='none'; }
 
-      mgStart(roomUrls(r));
+      // order: the room's reel → the owner's video → the photographs
+      mgStart(window.OrchidMedia
+        ? OrchidMedia.roomMedia(r, 'home')
+        : roomUrls(r).map(function(u){ return { kind:'image', src:u, poster:u, ready:true }; }));
 
       el('mFacts').innerHTML = (r.facts || []).map(function(f){
         return '<div class="f"><span class="k">'+esc(f.label)+'</span><span class="v">'+esc(f.value)+'</span></div>';
@@ -1249,5 +1474,7 @@
     document.addEventListener('keydown', function(ev){ if(ev.key === 'Escape') closeRoom(); });
   })();
   </script>
+  <script src="shared/nav.js" defer></script>
+
 </body>
 </html>

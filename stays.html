@@ -137,6 +137,38 @@
   .overture .aside p{margin-top:16px;font-size:16px;line-height:1.85;color:var(--body);max-width:320px;}
   .overture .hr{height:1px;background:linear-gradient(to right,var(--gold),rgba(201,162,60,0));margin-top:18px;}
 
+  /* ───────────── THE OWNER, TO CAMERA ─────────────
+     A dark band between the overture and the rooms. The reel is portrait, so it
+     is given a tall column of its own rather than being cropped into a strip. */
+  .ownervoice{position:relative;background:#1c1813;color:#fff;padding:clamp(90px,13vh,150px) 0;overflow:hidden;}
+  .ownervoice::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(70% 55% at 78% 30%,rgba(201,162,60,.16),transparent 62%);pointer-events:none;}
+  .ownervoice .ov-grid{position:relative;display:grid;grid-template-columns:clamp(250px,25vw,330px) 1fr;
+    gap:clamp(40px,6vw,88px);align-items:center;}
+  .ownervoice .ov-media{position:relative;}
+  /* a thin gold frame offset behind the reel — the "corner video" treatment */
+  .ownervoice .ov-media::before{content:"";position:absolute;inset:-16px -16px 16px 16px;
+    border:1px solid rgba(201,162,60,.42);border-radius:6px;pointer-events:none;}
+  .ownervoice .ov-media .ovcard{border-radius:4px;box-shadow:0 30px 70px rgba(0,0,0,.5);}
+  .ownervoice .eyebrow{color:var(--gold);margin-bottom:22px;}
+  .ownervoice h2{font-family:var(--serif);font-weight:400;color:#fff;
+    font-size:clamp(34px,4.6vw,60px);line-height:1.06;letter-spacing:-.5px;}
+  .ownervoice h2 em{font-style:italic;color:var(--gold-soft);}
+  .ownervoice .ov-lede{margin-top:22px;font-size:16px;line-height:1.85;color:rgba(255,255,255,.76);max-width:52ch;}
+  .ownervoice .ov-rule{height:1px;background:linear-gradient(to right,var(--gold),rgba(201,162,60,0));margin:30px 0 26px;}
+  .ownervoice .ov-points{list-style:none;display:grid;gap:14px;margin:0;padding:0;}
+  .ownervoice .ov-points li{display:flex;align-items:baseline;gap:16px;}
+  .ownervoice .ov-points .n{font-family:var(--serif);font-size:15px;color:var(--gold);letter-spacing:1px;flex:none;}
+  .ownervoice .ov-points .t{font-size:15px;color:rgba(255,255,255,.88);line-height:1.5;}
+  .ownervoice .ov-sig{font-family:var(--script);font-size:42px;color:var(--gold);line-height:1;margin-top:34px;}
+  .ownervoice .ov-who{font-size:10.5px;letter-spacing:2.8px;text-transform:uppercase;font-weight:700;
+    color:rgba(255,255,255,.5);margin-top:8px;}
+  @media(max-width:900px){
+    .ownervoice .ov-grid{grid-template-columns:1fr;gap:44px;}
+    .ownervoice .ov-media{max-width:320px;width:100%;}
+    .ownervoice .ov-media::before{inset:-12px -12px 12px 12px;}
+  }
+
   /* ───────────── ROOM CHAPTERS ───────────── */
   .chapters{background:#1c1813;}
   .chapter{position:relative;min-height:100vh;display:flex;align-items:center;overflow:hidden;
@@ -380,6 +412,26 @@
     </div>
   </section>
 
+  <!-- THE OWNER, TO CAMERA — sits between the overture and the rooms -->
+  <section class="ownervoice" id="ownervoice" aria-label="A word from the owner">
+    <div class="wrap ov-grid">
+      <div class="ov-media reveal" id="ownerVideoSlot"></div>
+      <div class="ov-words reveal">
+        <div class="eyebrow">A word from the owner</div>
+        <h2>The person who<br>left the <em>trees</em> standing</h2>
+        <p class="ov-lede">Eleven rooms were built around what was already here — not the other way round. Before you pick one, hear why that decision was made, and which room tends to suit which kind of trip.</p>
+        <div class="ov-rule draw"></div>
+        <ul class="ov-points" data-stagger>
+          <li><span class="n">01</span><span class="t">Why the forest came first</span></li>
+          <li><span class="n">02</span><span class="t">Poolside, or deep in the trees</span></li>
+          <li><span class="n">03</span><span class="t">What the eleven rooms have in common</span></li>
+        </ul>
+        <div class="ov-sig">Orchid Tree</div>
+        <div class="ov-who">Pradeep Kuppa Swamy &middot; landscape architect, founder</div>
+      </div>
+    </div>
+  </section>
+
   <!-- ROOM CHAPTERS -->
   <section class="chapters" aria-label="The rooms">
 
@@ -479,7 +531,7 @@
       <div class="incl-list" data-stagger>
         <div class="incl-row"><span class="ir-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h12a4 4 0 0 1 0 8H4z"/><path d="M4 8V5M8 8V5M12 8V5"/></svg></span><div><h3>Breakfast, included</h3><p>Cooked fresh each morning and plated, never a buffet. Lunch and dinner are pre-ordered from the restaurant.</p></div></div>
         <div class="incl-row"><span class="ir-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/><path d="M3 12c2-2 4-2 6 0s4 2 6 0 4-2 6 0"/></svg></span><div><h3>Pool, steam and the run of it</h3><p>The ozone pool, the common steam room, the open-air gym, billiards and games, all part of the stay.</p></div></div>
-        <div class="incl-row"><span class="ir-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8c0-3 3-5 7-5M19 8c0-3-3-5-7-5"/><path d="M5 8c0 4 3 6 7 6s7-2 7-6"/></svg></span><div><h3>The whole estate</h3><p>Forest trails, the farm and buggy, the bonfire and a sky full of stars. Activities across the grounds, on the house.</p></div></div>
+        <div class="incl-row"><span class="ir-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8c0-3 3-5 7-5M19 8c0-3-3-5-7-5"/><path d="M5 8c0 4 3 6 7 6s7-2 7-6"/></svg></span><div><h3>The whole estate</h3><p>Forest trails, the farm, the bonfire and a sky full of stars. Activities across the grounds, on the house.</p></div></div>
         <div class="incl-row"><span class="ir-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span><div><h3>Thoughtful rooms</h3><p>Air conditioned, sun-lit baths, copper water jugs, millet snacks, a kettle and fresh linen. Pets welcome in most.</p></div></div>
         <div class="incl-row"><span class="ir-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10l-1 7a4 4 0 0 1-8 0z"/><path d="M17 6h2a2 2 0 0 1 0 4h-2"/></svg></span><div><h3>Proudly BYOB</h3><p>Bring your own bottle and pour it slowly in the outdoor lounge, under the stars when the bonfire catches.</p></div></div>
         <div class="incl-row"><span class="ir-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><div><h3>No clock, no crowd</h3><p>An estate kept small on purpose. No itinerary, no day visitors, no rush. The day is yours to waste beautifully.</p></div></div>
@@ -604,6 +656,19 @@
     WhatsApp
   </a>
 
+  <script src="shared/media.js"></script>
+  <script src="shared/video.js"></script>
+  <script>
+  // the owner's reel, dropped into the band between the overture and the rooms
+  (function(){
+    var slot = document.getElementById('ownerVideoSlot');
+    var v = window.OrchidMedia && OrchidMedia.owner('stays');
+    if(!slot) return;
+    if(!v){ var sec = document.getElementById('ownervoice'); if(sec) sec.remove(); return; }
+    slot.innerHTML = OrchidVideo.card(v, { ratio:'portrait', badge:'The owner' });
+    OrchidVideo.bind(slot);
+  })();
+  </script>
   <script>
   (function(){
     var nav = document.getElementById('nav'), fab = document.getElementById('bookFab'), prog = document.getElementById('progress');
@@ -661,6 +726,9 @@
     navScroll(); toggleFab(); setProgress(); frame();
   })();
   </script>
+
+  <script src="shared/nav.js" defer></script>
+
 
 </body>
 </html>

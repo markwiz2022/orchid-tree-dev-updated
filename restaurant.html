@@ -306,6 +306,9 @@
     </div>
   </section>
 
+  <!-- THE OWNER, TO CAMERA — rendered from shared/media.js (OWNER.restaurant) -->
+  <section class="ownerband" id="ownerBand" aria-label="A word from the owner"></section>
+
   <!-- 3. MENU CATEGORIES -->
   <section class="cats" id="menu-categories">
     <div class="wrap">
@@ -431,6 +434,15 @@
   <a class="book-fab" id="bookFab" href="https://wa.me/918088251913?text=Hi%20Orchid%20Tree%2C%20I%27d%20like%20to%20enquire%20about%20a%20stay." target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.2 1.1-1.7 1.2-.4.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.5-2.6-1.1-4.3-3.8-4.5-4-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.7.7 1.8.1.1.1.3 0 .4l-.3.5c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.2.1.4.2.5.3.1.2.1.5-.1 1z"/></svg> WhatsApp</a>
 
   <!-- MENU DATA (single source of truth) -->
+  <script src="shared/media.js"></script>
+  <script src="shared/video.js"></script>
+  <script>
+  OrchidVideo.band('restaurant', document.getElementById('ownerBand'), {
+    heading: 'The farm is forty steps from the kitchen',
+    quote: '“What gets cooked depends on what came out of the ground that morning. That is the whole menu policy.”',
+    body: 'There is no buffet and no standing menu. Pradeep on why the table changes with the season, and why slower dining was the point from the beginning.',
+  });
+  </script>
   <script src="shared/menu.js"></script>
 
   <!-- PAGE BEHAVIOUR + RENDER -->
@@ -562,6 +574,9 @@
     document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
   })();
   </script>
+
+  <script src="shared/nav.js" defer></script>
+
 
 </body>
 </html>

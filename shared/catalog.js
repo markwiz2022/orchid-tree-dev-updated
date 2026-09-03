@@ -29,7 +29,7 @@
       amenities: ["Air conditioned rooms", "Lounge chair and table", "Hot water kettle", "Instant tea and coffee", "Accessible plug points", "Copper water jug", "Eco-friendly sun-lit bathrooms", "Millet-based snacks", "Fresh linen", "Indoor games", "Open air-gym", "Common steam room and shower", "Billiards and pool table", "Swimming pool access"],
       facts: [
         { label: "Sleeps", value: "2 adults + 1 child under 8" },
-        { label: "Bed", value: "One king bed" },
+        { label: "Bed", value: "American Standard Queen Size Bed" },
         { label: "Setting", value: "Pool view" },
         { label: "Bathroom", value: "Sun-lit skylight bath" },
         { label: "Steam", value: "Common steam room" },
@@ -52,7 +52,7 @@
       amenities: ["Air conditioned rooms", "Lounge chair and table", "Hot water kettle", "Instant tea and coffee", "Sit-out patio", "Accessible plug points", "Copper water jug", "Eco-friendly sun-lit bathrooms", "Millet-based snacks", "Indoor games", "Fresh linen", "Open air-gym", "Private steam room and shower", "Billiards and pool table", "Pet friendly", "Swimming pool access"],
       facts: [
         { label: "Sleeps", value: "2 adults + 1 child under 8" },
-        { label: "Bed", value: "One king bed" },
+        { label: "Bed", value: "American Standard Queen Size Bed" },
         { label: "Setting", value: "Built around a living tree" },
         { label: "Bathroom", value: "Open-to-sky bath" },
         { label: "Steam", value: "Private steam room" },
@@ -76,7 +76,7 @@
       amenities: ["Air conditioned rooms", "Lounge chair and table", "Hot water kettle", "Instant tea and coffee", "Accessible plug points", "Copper water jug", "Eco-friendly sun-lit bathrooms", "Millet-based snacks", "Indoor games", "Fresh linen", "Open air-gym", "Common steam room and shower", "Billiards and pool table", "Pet friendly", "Swimming pool access"],
       facts: [
         { label: "Sleeps", value: "Up to 4 guests" },
-        { label: "Bedding", value: "King bed with pull-out bedding" },
+        { label: "Bedding", value: "King Bed + Queen Size Pull-Out Bed" },
         { label: "Setting", value: "Pool view" },
         { label: "Bathroom", value: "Skylight bath" },
         { label: "Steam", value: "Common steam room" },
@@ -132,19 +132,38 @@
       U+"Image8_scaled_jpg_ec00384f49.webp", U+"Bodhi_Tree_03_1_35a5ef31e4.webp", U+"Experience_section_jpg_afb1c77479.webp" ] }, // estate/cottage stand-ins — no own photos on site
     { id: "bodhi-tree", name: "Bodhi Tree", type: "Couple Garden Cottage", imageUrls: [
       U+"bodhi_tree_5c9ce0f7ce.webp", U+"Bodhi_Tree_03_1_35a5ef31e4.webp", U+"bodhi_tree_3_png_eedb89acdf.webp" ] },
-    { id: "ashoka", name: "Ashoka", type: "Family Room by the Pool", imageUrls: [
+    { id: "ashoka", name: "Ashoka", type: "Family Room by the Pool",
+      facts: [{ label: "Bathroom", value: "Skylight bath" }], imageUrls: [
       U+"Copy_of_Pool_37_958d54313f.jpg", U+"Experience_section_jpg_afb1c77479.webp" ] }, // pool/estate stand-ins — no own photos on site
-    { id: "mallige", name: "Mallige", type: "Family Room by the Pool", imageUrls: [
+    { id: "mallige", name: "Mallige", type: "Family Room by the Pool",
+      facts: [{ label: "Wardrobe", value: "Walk-in wardrobe" }, { label: "Bedding style", value: "Contemporary" }], imageUrls: [
       U+"mallige_1_2da2180d1a.png", U+"mallige_3_1254d42ba6.png", U+"mallige_4_bb8549daf9.png", U+"mallige_6_358e210ba6.png" ] },
-    { id: "parijata", name: "Parijata", type: "Family Room by the Pool", imageUrls: [
+    { id: "parijata", name: "Parijata", type: "Family Room by the Pool",
+      facts: [{ label: "Bathroom", value: "Spacious bath" }], imageUrls: [
       U+"parijatha_1_ca96415792.png", U+"parijatha_2_5a97e01f6f.png", U+"parijatha_3_7346625d99.png", U+"parijatha_4_1aeda753b8.png", U+"parijatha_5_1b08d889b7.png", U+"parijatha_6_5abc4d4c23.png", U+"parijatha_7_3562757b52.png" ] },
-    { id: "spatika", name: "Spatika", type: "Family Room by the Pool", imageUrls: [
+    { id: "spatika", name: "Spatika", type: "Family Room by the Pool",
+      facts: [{ label: "Wardrobe", value: "Walk-in wardrobe" }, { label: "Bedding style", value: "Contemporary" }], imageUrls: [
       U+"spatika_1_5f0d445b7b.png", U+"spatika_2_5ba5aac23d.png", U+"spatika_3_0bf521ec9f.png", U+"spatika_4_bba4ebec9c.png", U+"spatika_6_2a126a86b9.png", U+"spatika_7_e568d57b5e.png" ] },
     { id: "chandana", name: "Chandana", type: "Family Garden Cottage", imageUrls: [
       U+"chandana_1_07f1342c80.png", U+"chandana_2_00966a14a0.png", U+"chandana_3_b67610e6cf.png", U+"chandana_4_dc8cceeac9.png", U+"chandana_5_8743acf819.png", U+"chandan8_5d6a0adb82.jpg" ] },
   ];
 
   // expand each room with its type's fields (flat object for existing consumers)
+  /**
+   * Facts for one room: the type's facts, with any room-level fact of the same
+   * label replacing it, and unmatched ones appended. Rooms of a type were once
+   * identical; a few now differ in the room itself (walk-in wardrobes, baths).
+   */
+  function mergeFacts(typeFacts, roomFacts) {
+    const out = typeFacts.map(function (f) { return { label: f.label, value: f.value }; });
+    (roomFacts || []).forEach(function (rf) {
+      const hit = out.filter(function (f) { return f.label === rf.label; })[0];
+      if (hit) hit.value = rf.value;
+      else out.push({ label: rf.label, value: rf.value });
+    });
+    return out;
+  }
+
   const ROOMS = ROOM_DEFS.map(function (r) {
     const t = TYPES[r.type];
     return {
@@ -162,7 +181,7 @@
       story: t.story,
       description: t.description,
       amenities: t.amenities.slice(),
-      facts: t.facts.slice(),
+      facts: mergeFacts(t.facts, r.facts),
       priceFrom: t.priceFrom,
       imageUrls: (r.imageUrls || []).slice(),          // full gallery (cover first)
       imageUrl: (r.imageUrls && r.imageUrls[0]) || null, // cover photo / placeholder
