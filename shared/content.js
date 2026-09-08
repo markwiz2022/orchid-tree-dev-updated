@@ -172,8 +172,8 @@
     // what the rate covers (booking card) — two variants by whether a food credit is set
     rateCovers: {
       label: "What your rate covers",
-      withCredit: "Your rate covers the room, breakfast each morning, and the run of the estate: pool, steam room, snacks, games, and fresh linens. Lunch, dinner, and a massage can be pre-booked separately, and your food credit goes toward your meals.",
-      withoutCredit: "Your rate covers the room, breakfast each morning, and the run of the estate: pool, steam room, snacks, games, and fresh linens. Lunch, dinner, and a massage can be pre-booked separately.",
+      withCredit: "Your rate covers the room, breakfast each morning, and the run of the estate: pool, steam room, snacks, games, and fresh linens. Includes 1 full body massage per room per night + veg and non-veg variants for all meals (Lunch, High-tea, Dinner and Breakfast) and 15 mins Kansa foot massage for all guests. Lunch, dinner, and a massage can be pre-booked separately, and your food credit goes toward your meals.",
+      withoutCredit: "Your rate covers the room, breakfast each morning, and the run of the estate: pool, steam room, snacks, games, and fresh linens. Includes 1 full body massage per room per night + veg and non-veg variants for all meals (Lunch, High-tea, Dinner and Breakfast) and 15 mins Kansa foot massage for all guests. Lunch, dinner, and a massage can be pre-booked separately.",
     },
 
     // how booking works (facts sourced from orchidtree.in policy/home pages)

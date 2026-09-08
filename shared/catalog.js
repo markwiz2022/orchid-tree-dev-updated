@@ -118,7 +118,7 @@
   // own site), first image is the cover. Rooms with 2+ images auto-advance on hover.
   // Hattimara and Ashoka have no photos on the site, so they carry a single
   // type-appropriate stand-in (garden / pool) and do not cycle.
-  const U = "https://orchidtree.in/uploads/";
+  const U = "images/uploads/";
   const ROOM_DEFS = [
     { id: "bael", name: "Bael", type: "Couple Room by the Pool", imageUrls: [
       U+"bael_1_2b4731913c.png", U+"bael_2_34db147abc.png", U+"bael_3_4e0302376b.png", U+"bael_4_e746f77d06.png", U+"bael_5_2cf5bfec43.png", U+"bael_6_6996e2a4d6.png", U+"bael_7_02044cddd4.webp" ] },

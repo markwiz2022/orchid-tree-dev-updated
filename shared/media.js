@@ -22,7 +22,7 @@
    and the card sizing both key off that flag, so a mixed set never letterboxes.
    ========================================================================== */
 (function () {
-  var U = "https://orchidtree.in/uploads/";
+  var U = "images/uploads/";
 
   /* ── PREVIEW ────────────────────────────────────────────────────────────────
      true  → cards for not-yet-uploaded videos still render (poster + play), so
@@ -43,7 +43,7 @@
   var OWNER = {
     home: {
       id: "owner-home",
-      src: null,                      // → 'videos/owner/owner-welcome.mp4'
+      src: 'videos/owner/instagram-reel.mp4',
       poster: U + "Experience_section_jpg_afb1c77479.webp",
       portrait: true,
       eyebrow: "From the owner",
@@ -142,8 +142,20 @@
     },
   };
 
-  /* Per-room overrides. e.g. "bodhi-tree": { src:'videos/rooms/bodhi-tree.mp4', … } */
-  var BY_ROOM = {};
+  /* Per-room overrides — each room gets its own exact video file */
+  var BY_ROOM = {
+    "bael":       { id:"room-bael",       src:"videos/rooms/bael.mp4",       poster:U+"bael_1_2b4731913c.png",                   portrait:true, label:"Bael room tour" },
+    "bilva":      { id:"room-bilva",      src:"videos/rooms/bilva.mp4",      poster:U+"bilva_1_5b0e867d51.png",                  portrait:true, label:"Bilva room tour" },
+    "datura":     { id:"room-datura",     src:"videos/rooms/datura.mp4",     poster:U+"datura_1_a0ba781d1b.png",                 portrait:true, label:"Datura room tour" },
+    "tulsi":      { id:"room-tulsi",      src:"videos/rooms/tulsi.mp4",      poster:U+"tulsi_1_9846f07961.png",                  portrait:true, label:"Tulsi room tour" },
+    "hattimara":  { id:"room-hattimara",  src:"videos/rooms/hattimara.mp4",  poster:U+"Image8_scaled_jpg_ec00384f49.webp",       portrait:true, label:"Hattimara room tour" },
+    "bodhi-tree": { id:"room-bodhi-tree", src:"videos/rooms/bodhi-tree.mp4", poster:U+"bodhi_tree_5c9ce0f7ce.webp",              portrait:true, label:"Bodhi Tree room tour" },
+    "ashoka":     { id:"room-ashoka",     src:"videos/rooms/ashoka.mp4",     poster:U+"Copy_of_Pool_37_958d54313f.jpg",          portrait:true, label:"Ashoka room tour" },
+    "mallige":    { id:"room-mallige",    src:"videos/rooms/mallige.mp4",    poster:U+"mallige_1_2da2180d1a.png",                portrait:true, label:"Mallige room tour" },
+    "parijata":   { id:"room-parijata",   src:"videos/rooms/parijata.mp4",   poster:U+"parijatha_1_ca96415792.png",              portrait:true, label:"Parijata room tour" },
+    "spatika":    { id:"room-spatika",    src:"videos/rooms/spatika.mp4",    poster:U+"spatika_1_5f0d445b7b.png",                portrait:true, label:"Spatika room tour" },
+    "chandana":   { id:"room-chandana",   src:"videos/rooms/chandana.mp4",   poster:U+"chandana_1_07f1342c80.png",               portrait:true, label:"Chandana room tour" },
+  };
 
   /* ── helpers ───────────────────────────────────────────────────────────── */
 
