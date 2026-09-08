@@ -1304,9 +1304,10 @@
         if(!it.src){ vid.removeAttribute('src'); vid.load(); }
         vid.controls = false;
         var lbl = el('mVlabel'); lbl.lastElementChild.textContent = it.ready ? (it.label || 'Video') : 'Coming soon';
-        el('mVplay').style.display = it.ready ? 'flex' : 'none';
+        el('mVplay').style.display = it.ready ? 'flex' : 'none'; // show play btn only when video ready
       } else {
         main.classList.remove('has-video','playing');
+        el('mVplay').style.display = 'none'; // always hide play btn on image slides
         try{ el('mVid').pause(); }catch(e){}
         var layers = mgLayers(), incoming = layers[1 - MG.cur];
         incoming.style.backgroundImage = "url('" + it.src + "')";
@@ -1362,12 +1363,22 @@
     el('mVplay').addEventListener('click', function(){
       var v = el('mVid'); if(!v.getAttribute('src')) return;
       mgStop(); el('mMain').classList.add('playing');
+      el('mVplay').style.display = 'none';
       v.controls = true; v.play();
     });
-    // Hide play button while playing, restore on pause or end
-    el('mVid').addEventListener('play',   function(){ el('mMain').classList.add('playing'); });
-    el('mVid').addEventListener('pause',  function(){ el('mMain').classList.remove('playing'); });
-    el('mVid').addEventListener('ended',  function(){ el('mMain').classList.remove('playing'); });
+    // Hide play button while playing; restore it on pause/end (only if still on video slide)
+    el('mVid').addEventListener('play',  function(){
+      el('mMain').classList.add('playing');
+      el('mVplay').style.display = 'none';
+    });
+    el('mVid').addEventListener('pause', function(){
+      el('mMain').classList.remove('playing');
+      if(el('mMain').classList.contains('has-video')) el('mVplay').style.display = 'flex';
+    });
+    el('mVid').addEventListener('ended', function(){
+      el('mMain').classList.remove('playing');
+      if(el('mMain').classList.contains('has-video')) el('mVplay').style.display = 'flex';
+    });
     el('mExpand').addEventListener('click', function(){
       if(window.OrchidVideo) OrchidVideo.open(MG.items, MG.i);
     });
