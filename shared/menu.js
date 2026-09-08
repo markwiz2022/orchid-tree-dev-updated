@@ -16,8 +16,8 @@
   var U = "https://images.unsplash.com/photo-";
   var P = "?w=900&q=80&auto=format&fit=crop";
   var IMG = {
-    estateBarbecue: "https://orchidtree.in/uploads/Copy_of_Barbeque_03_cf30f0f667.jpg",
-    estateFarm: "https://orchidtree.in/uploads/Experience_section_jpg_afb1c77479.webp",
+    estateBarbecue: "images/uploads/Copy_of_Barbeque_03_cf30f0f667.jpg",
+    estateFarm: "images/uploads/Experience_section_jpg_afb1c77479.webp",
     indian:    U + "1585937421612-70a008356fbe" + P,
     thali:     U + "1567337710282-00832b415979" + P,
     curry:     U + "1565557623262-b51c2513a641" + P,

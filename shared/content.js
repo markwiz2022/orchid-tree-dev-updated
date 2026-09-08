@@ -64,7 +64,7 @@
       eyebrow: "Add it to your stay",
       title: "A massage, whenever you want one",
       body: "A full-body massage in your room, and a fifteen-minute Kansa plate foot massage. Pre-book it for any evening of your stay.",
-      imageUrl: "https://orchidtree.in/uploads/Experience_section_jpg_afb1c77479.webp",
+      imageUrl: "images/uploads/Experience_section_jpg_afb1c77479.webp",
       cta: { label: "Add a massage", whatsappUrl: null },
     },
 
@@ -81,15 +81,15 @@
         { label: "Breakfast, every morning",
           short: "A plated breakfast to start each day, included with your stay.",
           moreUrl: null, // PLACEHOLDER
-          imageUrl: "https://orchidtree.in/uploads/Copy_of_Barbeque_03_cf30f0f667.jpg" },
+          imageUrl: "images/uploads/Copy_of_Barbeque_03_cf30f0f667.jpg" },
         { label: "Ozone-treated pool",
           short: "A clean, ozone-treated pool.",
           moreUrl: null, // PLACEHOLDER
-          imageUrl: "https://orchidtree.in/uploads/Copy_of_Pool_37_958d54313f.jpg" },
+          imageUrl: "images/uploads/Copy_of_Pool_37_958d54313f.jpg" },
         { label: "Steam room and open-sky showers",
           short: "Steam, and showers open to the sky.",
           moreUrl: null, // PLACEHOLDER
-          imageUrl: "https://orchidtree.in/uploads/Image8_scaled_jpg_ec00384f49.webp" },
+          imageUrl: "images/uploads/Image8_scaled_jpg_ec00384f49.webp" },
         { label: "Millet snack station",
           short: "Millet snacks, tea, coffee, and water, on the house.",
           moreUrl: null, // PLACEHOLDER
@@ -97,11 +97,11 @@
         { label: "Indoor games and open-air gym",
           short: "Chess, carrom, table tennis, billiards, a gym.",
           moreUrl: null, // PLACEHOLDER
-          imageUrl: "https://orchidtree.in/uploads/Copy_of_2_a5beee287f.jpg" },
+          imageUrl: "images/uploads/Copy_of_2_a5beee287f.jpg" },
         { label: "BYOB lounge",
           short: "Bring your own bottle to the outdoor lounge.",
           moreUrl: null, // PLACEHOLDER
-          imageUrl: "https://orchidtree.in/uploads/Image_6_1024x1536_bk_923d98c089.jpg" },
+          imageUrl: "images/uploads/Image_6_1024x1536_bk_923d98c089.jpg" },
       ],
     },
 
@@ -145,7 +145,7 @@
       title: "Plated, farm to table",
       body: "Nepali and North Indian home cooking, fresh and seasonal. Breakfast is included with your stay; lunch and dinner are pre-booked. Plated, never a buffet. No outside food. Proudly BYOB in the outdoor lounge.",
       creditLine: "Your food credit is a gift toward the table. Spend it on whatever you like.",
-      imageUrl: "https://orchidtree.in/uploads/Copy_of_Barbeque_03_cf30f0f667.jpg",
+      imageUrl: "images/uploads/Copy_of_Barbeque_03_cf30f0f667.jpg",
       // meals are ordered/pre-booked, not bundled. CTA will auto-generate a
       // WhatsApp Business message later; for now it links to whatsappUrl (or "#").
       cta: {
@@ -160,7 +160,7 @@
       eyebrow: "The architect of stillness",
       title: "Designed to bend around the forest",
       body: "Orchid Tree was created by Pradeep Kuppa Swamy, the landscape architect behind Infosys Mysore, Biocon, and Britannia, and a winner of the World Architecture Award. Here the buildings give way to the trees, not the other way around. Cottages were raised around living trunks. Solar power, recycled water, and eco-toiletries run throughout. It began as a pandemic-era idea about living more lightly.",
-      imageUrl: "https://orchidtree.in/uploads/pradip_aboutus_a82dd2aa16.jpg",
+      imageUrl: "images/uploads/pradip_aboutus_a82dd2aa16.jpg",
     },
 
     // where you will be (closing band). Distance is public; exact address is post-booking.
