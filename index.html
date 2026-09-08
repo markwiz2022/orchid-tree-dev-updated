@@ -194,6 +194,8 @@
     -webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);box-shadow:0 6px 22px rgba(0,0,0,.32);
     transition:background .25s ease,border-color .25s ease,transform .25s ease;}
   .room:hover .media .rpanel .pplay{background:var(--gold);border-color:var(--gold);transform:translate(-50%,-50%) scale(1.07);}
+  /* Hide play icon and label once the video starts playing on hover */
+  .room:hover .media .rpanel.playing .pplay,.room:hover .media .rpanel.playing .plbl{opacity:0;pointer-events:none;}
   .room .media .rpanel .pplay svg{width:20px;height:20px;fill:#fff;margin-left:2px;}
   .room .media .rpanel .plbl{position:absolute;left:0;right:0;bottom:16px;z-index:2;text-align:center;
     font-size:9.5px;font-weight:700;letter-spacing:2.2px;text-transform:uppercase;color:#fff;
@@ -503,8 +505,8 @@
       <a href="stays.html">Stays</a>
       <a href="experiences.html">Experiences</a>
       <a href="restaurant.html">Restaurant</a>
-      <a href="weddings.html">Weddings</a>
-      <a href="corporate.html">Corporate</a>
+            <a href="corporate.html">Corporate</a>
+<a href="weddings.html">Weddings</a>
       <a href="about.html">About</a>
       <a href="https://wa.me/918088251913?text=Hi%20Orchid%20Tree%2C%20I%27d%20like%20to%20enquire%20about%20a%20stay." class="reserve" target="_blank" rel="noopener">WhatsApp</a>
     </div>
@@ -1205,10 +1207,14 @@
 
         card._reelVid = panel.querySelector('video');
         card.addEventListener('mouseenter', function(){
-          if(card._reelVid){ try{ card._reelVid.currentTime=0; card._reelVid.play(); }catch(e){} }
+          if(card._reelVid){
+            try{ card._reelVid.currentTime=0; card._reelVid.play(); }catch(e){}
+            panel.classList.add('playing');
+          }
         });
         card.addEventListener('mouseleave', function(){
           if(card._reelVid){ try{ card._reelVid.pause(); }catch(e){} }
+          panel.classList.remove('playing');
         });
       }
 
