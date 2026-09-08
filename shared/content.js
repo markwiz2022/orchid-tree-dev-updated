@@ -205,9 +205,9 @@
 
     // all five real reviews held here; three are placed on the page (see below)
     reviews: [
-      { id: "aditi",   name: "Aditi Verma",        rating: 5, verified: true, text: "A calm staycation close to the city. Mary was a wonderful host to the kids and to us. A relaxing massage, and homely food made with heart." },
-      { id: "ketty",   name: "Ketty Bouder",       rating: 5, verified: true, text: "A wonderful stay. Mary was kind and helpful, and the Indian food had good ingredients and real variety." },
-      { id: "srikant", name: "Srikant Srivastava", rating: 5, verified: true, text: "An amazing experience. Mary went above and beyond to make our stay special." },
+      { id: "aditi",   name: "Aditi Verma",        rating: 5, verified: true, text: "A calm staycation close to the city. Meena was a wonderful host to the kids and to us. A relaxing massage, and homely food made with heart." },
+      { id: "ketty",   name: "Ketty Bouder",       rating: 5, verified: true, text: "A wonderful stay. Meena was kind and helpful, and the Indian food had good ingredients and real variety." },
+      { id: "srikant", name: "Srikant Srivastava", rating: 5, verified: true, text: "An amazing experience. Meena went above and beyond to make our stay special." },
       { id: "krishna", name: "Krishna Prasad",     rating: 5, verified: true, text: "Very good hospitality and very nice food." },
       { id: "madhu",   name: "Madhu Nadiger",      rating: 4, verified: true, text: "A pleasant stay. The property is well kept, comfortable, and easy to reach. Good food." },
     ],

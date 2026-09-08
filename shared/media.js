@@ -167,16 +167,16 @@
   }
 
   /**
-   * The full ordered media set for a room, exactly as the brief asks:
-   *   1. the room's own reel   2. the owner's video   3. the photographs
+   * The full ordered media set for a room:
+   *   1. the room's own reel   2. the photographs
+   * (Owner video removed from room popup — only room reel + photos shown)
    * Returns [{ kind:'video'|'image', src, poster, portrait, label }]
    */
   function roomMedia(room, ownerPage) {
     var out = [];
     var rv = roomVideo(room);
     if (rv) out.push({ kind: "video", src: rv.src, poster: rv.poster, portrait: rv.portrait !== false, label: rv.label || "Room tour", ready: ready(rv) });
-    var ov = owner(ownerPage || "stays");
-    if (ov) out.push({ kind: "video", src: ov.src, poster: ov.poster, portrait: ov.portrait !== false, label: ov.label, owner: true, ready: ready(ov) });
+    // Owner video intentionally excluded from room popup
     (room && room.imageUrls || []).forEach(function (u) {
       out.push({ kind: "image", src: u, poster: u, portrait: false, ready: true });
     });
