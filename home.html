@@ -1364,7 +1364,10 @@
       mgStop(); el('mMain').classList.add('playing');
       v.controls = true; v.play();
     });
-    el('mVid').addEventListener('ended', function(){ el('mMain').classList.remove('playing'); });
+    // Hide play button while playing, restore on pause or end
+    el('mVid').addEventListener('play',   function(){ el('mMain').classList.add('playing'); });
+    el('mVid').addEventListener('pause',  function(){ el('mMain').classList.remove('playing'); });
+    el('mVid').addEventListener('ended',  function(){ el('mMain').classList.remove('playing'); });
     el('mExpand').addEventListener('click', function(){
       if(window.OrchidVideo) OrchidVideo.open(MG.items, MG.i);
     });
