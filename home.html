@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1129,6 +1129,21 @@
     }
     document.getElementById('expShorts').innerHTML = expHtml;
     if(window.OrchidVideo) OrchidVideo.bind(document.getElementById('expShorts'));
+    // autoplay owner video muted when section scrolls into view
+    (function(){
+      var sh = document.getElementById('expShorts'); if(!sh) return;
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          var ownerCard = sh.querySelector('.short-owner');
+          if(!ownerCard) return;
+          var vid = ownerCard.querySelector('video');
+          if(!vid) return;
+          if(e.isIntersecting){ vid.muted = true; vid.play().catch(function(){}); }
+          else { vid.pause(); }
+        });
+      }, { threshold: 0.25 });
+      io.observe(sh);
+    })();
     (function(){
       var sh=document.getElementById('expShorts'), nav=document.getElementById('expNav'), fade=document.getElementById('expFade');
       var prev=document.getElementById('expPrev'), next=document.getElementById('expNext');
