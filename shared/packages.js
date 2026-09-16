@@ -196,12 +196,33 @@
     for (var i = 0; i < order.length && (remA > 0 || remC > 0); i++) {
       var meta = TYPE_META[order[i]];
       if (!typeAllowed(meta, g)) continue;
-      var avail = meta.count;
+      var avail = meta.count - (used[meta.type] || 0);
       while ((remA > 0 || remC > 0) && avail > 0) {
         // Every room must be anchored by at least one adult — children (8 and
         // under) can never sleep in a room without a grown-up. If only children
         // remain, we cannot open another room, so this layout can't seat them.
         if (remA === 0) return null;
+
+        // --- OPTIMIZATION: Right-size the tail ---
+        // If the remaining people can fit into a smaller room that is further down
+        // the priority list, we should break out of this large room and let the
+        // outer loop reach the smaller room, saving them space and money.
+        var currentTotal = remA + remC;
+        var canFitElsewhere = false;
+        for (var j = i + 1; j < order.length; j++) {
+          var futureMeta = TYPE_META[order[j]];
+          var futureAvail = futureMeta.count - (used[futureMeta.type] || 0);
+          if (typeAllowed(futureMeta, g) && futureAvail > 0) {
+            if (futureMeta.capacity >= currentTotal && futureMeta.adultCap >= remA && futureMeta.capacity < meta.capacity) {
+              canFitElsewhere = true;
+              break;
+            }
+          }
+        }
+        if (canFitElsewhere) {
+          break; // Stop using this large room type; advance to the smaller one.
+        }
+
         var a = 1; remA -= 1;                                       // anchor adult
         var c = Math.min(remC, meta.capacity - a); remC -= c;        // fill with children
         var extraA = Math.min(remA, meta.adultCap - a, meta.capacity - a - c);
