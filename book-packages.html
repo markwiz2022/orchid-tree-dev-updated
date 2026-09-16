@@ -636,14 +636,12 @@
     // ---- branch + render --------------------------------------------------
     var rendered;
     try {
-      // If a specific room was requested but it doesn't fit the current group size,
-      // silently drop the restriction and show what actually fits.
-      var activeRoom = roomParam;
-      if(activeRoom && C && C.get(activeRoom) && !roomFits(activeRoom)){
-        activeRoom = null;
-      }
+      // Force the algorithm to dictate room display: completely ignore any forced 'room' param
+      // so users always see the strictly prioritized recommendations (e.g. Tulsi).
+      var activeRoom = null;
 
       if(activeRoom && C && C.get(activeRoom)){
+        // This block is now effectively disabled to strictly enforce recommendations.
         var rm = C.get(activeRoom);
         var ro = forcedRoomOption(activeRoom);
         el('introBlock').innerHTML = introHtml('Your room', rm.name,
