@@ -119,7 +119,22 @@
     var opts = Object.keys(TYPE_META)
       .map(function (t) { return TYPE_META[t]; })
       .filter(function (m) {
-        return typeAllowed(m, g) && m.capacity >= totalGuests && m.adultCap >= g.adults;
+        if (!(typeAllowed(m, g) && m.capacity >= totalGuests && m.adultCap >= g.adults)) {
+          return false;
+        }
+        
+        // STRICT RULE 1: If 1 or 2 guests, ONLY show Couple rooms. Hide Family rooms.
+        if (totalGuests <= 2 && m.type.indexOf("Family") !== -1) {
+          return false;
+        }
+
+        // STRICT RULE 2: If 4 or fewer guests, hide the 6-person Family Garden Cottage. 
+        // Only show it when guest count is more than 4.
+        if (totalGuests <= 4 && m.capacity > 4) {
+          return false;
+        }
+
+        return true;
       })
       // snuggest fit first, then cheapest
       .sort(function (a, b) { return (a.capacity - b.capacity) || (a.price - b.price); });
@@ -161,11 +176,11 @@
       });
     });
 
-    // As requested: "if they select 4 members then only 2 room should display"
-    if (totalGuests <= 4) {
+    // As requested: "in couple room only 2members can accomodate then show as a 2room"
+    if (totalGuests <= 2) {
       return recommendedCards.slice(0, 2);
     }
-    // If >4, we allow more to show so they have options to select from.
+    // "with choice of 3 rooms only exceeds morethan 2members"
     return recommendedCards.slice(0, 3);
   }
 
