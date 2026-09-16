@@ -529,12 +529,13 @@
         : '<span class="rb-pill nopet">No pets</span>';
       return '<div class="rb-meta"><span class="rb-pill">'+esc(capacityLabel)+'</span>'+pet+'</div>';
     }
-    function cover(image, pillsHtml, name, feel){
+    function cover(image, pillsHtml, name, feel, preTitleHtml){
       var ph = image
         ? '<div class="ph" style="background-image:url(\''+esc(image)+'\')"></div>'
         : '<div class="ph"></div>';
+      var extra = preTitleHtml ? preTitleHtml : '';
       return '<div class="cover">'+ph+'<div class="scrim"></div>'+pillsHtml+
-        '<div class="cap"><div class="cn">'+esc(name)+'</div>'+
+        '<div class="cap">'+extra+'<div class="cn">'+esc(name)+'</div>'+
         (feel ? '<div class="cf">'+esc(feel)+'</div>' : '')+'</div></div>';
     }
     function priceBlock(subtotal, nights, perNight){
@@ -561,7 +562,7 @@
 
       return '<div class="opt reveal" data-kind="room" data-idx="'+i+'">'+
         '<div class="room-open" data-room="'+esc(opt.roomId)+'">'+
-          cover(opt.image, pills(opt.capacityLabel, opt.petFriendly), recommendBadge + opt.name, opt.feel)+
+          cover(opt.image, pills(opt.capacityLabel, opt.petFriendly), opt.name, opt.feel, recommendBadge)+
         '</div>'+
         '<div class="body">'+
           feel + facts +

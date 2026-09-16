@@ -161,7 +161,12 @@
       });
     });
 
-    return recommendedCards;
+    // As requested: "if they select 4 members then only 2 room should display"
+    if (totalGuests <= 4) {
+      return recommendedCards.slice(0, 2);
+    }
+    // If >4, we allow more to show so they have options to select from.
+    return recommendedCards.slice(0, 3);
   }
 
   // ---- greedy packer: seat the group using a given type priority order -----
