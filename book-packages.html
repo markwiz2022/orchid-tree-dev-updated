@@ -556,9 +556,12 @@
         '<span class="chip">'+(opt.petFriendly ? 'Pets welcome' : 'No pets')+'</span>'+
       '</div>';
       var feel = opt.feel ? '<div class="room-feel">'+esc(opt.feel)+'</div>' : '';
+      
+      var recommendBadge = opt.isRecommended ? '<div class="eyebrow" style="margin-bottom:8px;color:#c9a23c;">Recommended</div>' : '';
+
       return '<div class="opt reveal" data-kind="room" data-idx="'+i+'">'+
         '<div class="room-open" data-room="'+esc(opt.roomId)+'">'+
-          cover(opt.image, pills(opt.capacityLabel, opt.petFriendly), opt.name, opt.feel)+
+          cover(opt.image, pills(opt.capacityLabel, opt.petFriendly), recommendBadge + opt.name, opt.feel)+
         '</div>'+
         '<div class="body">'+
           feel + facts +
@@ -632,20 +635,21 @@
     // ---- branch + render --------------------------------------------------
     var rendered;
     try {
-      if(roomParam && C && C.get(roomParam)){
-        var rm = C.get(roomParam);
-        var ro = forcedRoomOption(roomParam);
+      // If a specific room was requested but it doesn't fit the current group size,
+      // silently drop the restriction and show what actually fits.
+      var activeRoom = roomParam;
+      if(activeRoom && C && C.get(activeRoom) && !roomFits(activeRoom)){
+        activeRoom = null;
+      }
+
+      if(activeRoom && C && C.get(activeRoom)){
+        var rm = C.get(activeRoom);
+        var ro = forcedRoomOption(activeRoom);
         el('introBlock').innerHTML = introHtml('Your room', rm.name,
           'Your stay in ' + rm.name + '. Every room comes with breakfast, the pool, the steam room, and the run of the estate.');
-        var note = '';
-        if(!roomFits(roomParam)){
-          var uf = new URLSearchParams(location.search); uf.delete('room');
-          note = '<p class="room-note">This room sleeps '+rm.capacity+', which is fewer than your group. '+
-            '<a href="book-packages.html?'+uf.toString()+'">See options that fit everyone &rsaquo;</a></p>';
-        }
         var uall = new URLSearchParams(location.search); uall.delete('room');
         var broaden = '<a class="room-broaden" href="book-packages.html?'+uall.toString()+'">Travelling as a larger group? See all options &rsaquo;</a>';
-        el('optionsArea').innerHTML = note + '<div class="opt-grid rooms">'+ singleRoomCard(ro, 0) +'</div>' + broaden;
+        el('optionsArea').innerHTML = '<div class="opt-grid rooms">'+ singleRoomCard(ro, 0) +'</div>' + broaden;
         rendered = { kind: 'room', list: [ro] };
       } else if(P.fitsSingleRoom(group)){
         var rooms = P.generateSingleRooms(group) || [];

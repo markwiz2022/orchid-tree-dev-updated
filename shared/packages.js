@@ -114,34 +114,54 @@
   // ---- the fork: room-TYPE options that each fit the group in one room ------
   function generateSingleRooms(group) {
     var g = normGroup(group);
+    var totalGuests = groupTotal(g);
+
     var opts = Object.keys(TYPE_META)
       .map(function (t) { return TYPE_META[t]; })
       .filter(function (m) {
-        return typeAllowed(m, g) && m.capacity >= groupTotal(g) && m.adultCap >= g.adults;
+        return typeAllowed(m, g) && m.capacity >= totalGuests && m.adultCap >= g.adults;
       })
       // snuggest fit first, then cheapest
       .sort(function (a, b) { return (a.capacity - b.capacity) || (a.price - b.price); });
 
-    return opts.map(function (m) {
-      var id = m.roomIds[0];
-      var room = Catalog.get(id);
-      return {
-        type: m.type,
-        roomId: id,
-        roomIds: [id],
-        name: m.type,             // single-room cards lead with the room-type name
-        feel: m.tagline || "",
-        image: (room && room.imageUrls && room.imageUrls[0]) || null,
-        petFriendly: m.petFriendly,
-        capacity: m.capacity,
-        capacityLabel: room ? room.occupancyShort : (m.occupancyShort || ("Sleeps " + m.capacity)),
-        groupSize: groupTotal(g),
-        nights: g.nights,
-        subtotal: m.price * g.nights,
-        perNight: m.price,
-        breakdown: allocate(g, [{ type: m.type, id: id, capacity: m.capacity }]),
-      };
+    var recommendedCards = [];
+
+    opts.forEach(function(m) {
+      // Use the new recommendation algorithm (if available), fallback to first room if not
+      var topRooms = [];
+      if (window.OrchidRecommend) {
+         topRooms = window.OrchidRecommend.recommendRooms(m.type, totalGuests, m.roomIds);
+      } else {
+         topRooms = [{ id: m.roomIds[0], isRecommended: true }];
+      }
+
+      topRooms.forEach(function(rec) {
+        var room = Catalog.get(rec.id);
+        if(!room) return;
+        
+        var namePrefix = rec.isRecommended ? "Recommended: " : "";
+        
+        recommendedCards.push({
+          type: m.type,
+          roomId: rec.id,
+          roomIds: [rec.id],
+          name: room.name, // Use the specific room name (e.g. Ashoka) instead of category
+          feel: m.tagline || "",
+          image: (room && room.imageUrls && room.imageUrls[0]) || null,
+          petFriendly: m.petFriendly,
+          capacity: m.capacity,
+          capacityLabel: room.occupancyShort || (m.occupancyShort || ("Sleeps " + m.capacity)),
+          groupSize: totalGuests,
+          nights: g.nights,
+          subtotal: m.price * g.nights,
+          perNight: m.price,
+          breakdown: allocate(g, [{ type: m.type, id: rec.id, capacity: m.capacity }]),
+          isRecommended: rec.isRecommended
+        });
+      });
     });
+
+    return recommendedCards;
   }
 
   // ---- greedy packer: seat the group using a given type priority order -----
