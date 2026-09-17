@@ -677,11 +677,6 @@
       } else {
         var rooms = P.fitsSingleRoom(group) ? (P.generateSingleRooms(group) || []) : [];
         var packages = P.generatePackages(group) || [];
-        
-        // Custom request: for exactly 4 guests, show exactly 1 Family Room + the available Packages
-        if (group.adults + (group.children || 0) === 4) {
-          if (rooms.length > 1) rooms = rooms.slice(0, 1);
-        }
 
         rendered = { kind: 'mixed', list: rooms.concat(packages) };
 
@@ -694,13 +689,14 @@
           
           el('introBlock').innerHTML = introHtml('Your options', title, body);
           
-          var html = '';
+          var html = '<div class="opt-grid rooms">';
           if (rooms.length) {
-            html += '<div class="opt-grid rooms" style="margin-bottom: 40px;">'+ rooms.map(function(r, i) { return singleRoomCard(r, i); }).join('') +'</div>';
+            html += rooms.map(function(r, i) { return singleRoomCard(r, i); }).join('');
           }
           if (packages.length) {
-            html += '<div class="opt-grid">'+ packages.map(function(p, i) { return packageCard(p, i + rooms.length); }).join('') +'</div>';
+            html += packages.map(function(p, i) { return packageCard(p, i + rooms.length); }).join('');
           }
+          html += '</div>';
           el('optionsArea').innerHTML = html;
         }
       }
