@@ -677,6 +677,12 @@
       } else {
         var rooms = P.fitsSingleRoom(group) ? (P.generateSingleRooms(group) || []) : [];
         var packages = P.generatePackages(group) || [];
+        
+        // Custom request: for exactly 4 guests, limit to 1 Family Room to sit alongside the Couples package
+        var totalGuests = group.adults + (group.children || 0);
+        if (totalGuests === 4 && rooms.length > 1) {
+          rooms = rooms.slice(0, 1);
+        }
 
         rendered = { kind: 'mixed', list: rooms.concat(packages) };
 
