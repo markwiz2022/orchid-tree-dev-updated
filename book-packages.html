@@ -19,6 +19,18 @@
     --img:url('images/uploads/bodhi_tree_3_png_eedb89acdf.webp');
     --pad:clamp(24px,6.5vw,110px);
   }
+  @keyframes xfade {
+    0%   { opacity: 1; }
+    20%  { opacity: 1; }
+    33%  { opacity: 0; }
+    87%  { opacity: 0; }
+    100% { opacity: 1; }
+  }
+  .ph.anim-fade {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    opacity: 0;
+  }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:var(--sans);background:var(--cream);color:var(--body);line-height:1.65;overflow-x:hidden;}
   img{display:block;}
@@ -530,9 +542,21 @@
       return '<div class="rb-meta"><span class="rb-pill">'+esc(capacityLabel)+'</span>'+pet+'</div>';
     }
     function cover(image, pillsHtml, name, feel, preTitleHtml){
-      var ph = image
-        ? '<div class="ph" style="background-image:url(\''+esc(image)+'\')"></div>'
-        : '<div class="ph"></div>';
+      var ph = '';
+      if (Array.isArray(image) && image.length > 1) {
+        // Crossfade up to 4 images
+        var imgs = image.slice(0, 4);
+        var dur = imgs.length * 4; // 4s per image
+        ph = imgs.map(function(img, i) {
+          var delay = i * 4;
+          return '<div class="ph anim-fade" style="background-image:url(\''+esc(img)+'\'); animation: xfade '+dur+'s infinite '+delay+'s;"></div>';
+        }).join('');
+      } else {
+        var src = Array.isArray(image) ? image[0] : image;
+        ph = src
+          ? '<div class="ph" style="background-image:url(\''+esc(src)+'\')"></div>'
+          : '<div class="ph"></div>';
+      }
       var extra = preTitleHtml ? preTitleHtml : '';
       return '<div class="cover">'+ph+'<div class="scrim"></div>'+pillsHtml+
         '<div class="cap">'+extra+'<div class="cn">'+esc(name)+'</div>'+
@@ -585,7 +609,7 @@
           '<span class="rchevron">&rsaquo;</span></li>';
       }).join('');
       return '<div class="opt reveal" data-kind="package" data-idx="'+i+'">'+
-        cover(pkg.cover, pills('Sleeps '+pkg.totalCapacity, pkg.petFriendly), pkg.name, pkg.feel)+
+        cover(pkg.images || pkg.cover, pills('Sleeps '+pkg.totalCapacity, pkg.petFriendly), pkg.name, pkg.feel)+
         '<div class="body">'+
           '<ul class="breakdown">'+rows+'</ul>'+
           '<div class="cap-line">'+esc(pkg.capacityLine)+'</div>'+
@@ -650,27 +674,34 @@
         var broaden = '<a class="room-broaden" href="book-packages.html?'+uall.toString()+'">Travelling as a larger group? See all options &rsaquo;</a>';
         el('optionsArea').innerHTML = '<div class="opt-grid rooms">'+ singleRoomCard(ro, 0) +'</div>' + broaden;
         rendered = { kind: 'room', list: [ro] };
-      } else if(P.fitsSingleRoom(group)){
-        var rooms = P.generateSingleRooms(group) || [];
-        if(!rooms.length){
-          el('introBlock').innerHTML = introHtml('A stay for your group', 'Let\'s find you a room');
-          el('optionsArea').innerHTML = fallbackCard();
-        } else {
-          el('introBlock').innerHTML = introHtml('Your room', rooms.length > 1 ? 'Rooms that fit your group' : 'The room that fits your group',
-            'One room holds everyone. Pick the feeling you\'re after. Every room comes with breakfast, the pool, the steam room, and the run of the estate.');
-          el('optionsArea').innerHTML = '<div class="opt-grid rooms">'+ rooms.map(singleRoomCard).join('') +'</div>';
-          rendered = { kind: 'room', list: rooms };
-        }
       } else {
+        var rooms = P.fitsSingleRoom(group) ? (P.generateSingleRooms(group) || []) : [];
         var packages = P.generatePackages(group) || [];
-        if(!packages.length){
+        
+        // Custom request: for exactly 4 guests, show exactly 1 Family Room + the available Packages
+        if (group.adults + (group.children || 0) === 4) {
+          if (rooms.length > 1) rooms = rooms.slice(0, 1);
+        }
+
+        rendered = { kind: 'mixed', list: rooms.concat(packages) };
+
+        if(!rooms.length && !packages.length){
           el('introBlock').innerHTML = introHtml('A stay for your group', 'Let\'s plan this together');
           el('optionsArea').innerHTML = fallbackCard();
         } else {
-          el('introBlock').innerHTML = introHtml('Your options', packages.length >= 3 ? 'Three ways to stay' : 'Ways to stay',
-            'Your group needs more than one room. Here are a few ways to arrange them. Every room comes with breakfast and the run of the estate.');
-          el('optionsArea').innerHTML = '<div class="opt-grid">'+ packages.map(packageCard).join('') +'</div>';
-          rendered = { kind: 'package', list: packages };
+          var title = (rooms.length && packages.length) ? 'Rooms & Packages that fit your group' : (rooms.length > 1 ? 'Rooms that fit your group' : (packages.length >= 3 ? 'Three ways to stay' : (rooms.length ? 'The room that fits your group' : 'Ways to stay')));
+          var body = (rooms.length && packages.length) ? 'Every stay includes breakfast, the pool, the steam room, and the run of the estate.' : (rooms.length ? 'One room holds everyone. Pick the feeling you\'re after. Every room comes with breakfast, the pool, the steam room, and the run of the estate.' : 'Your group needs more than one room. Here are a few ways to arrange them. Every room comes with breakfast and the run of the estate.');
+          
+          el('introBlock').innerHTML = introHtml('Your options', title, body);
+          
+          var html = '';
+          if (rooms.length) {
+            html += '<div class="opt-grid rooms" style="margin-bottom: 40px;">'+ rooms.map(function(r, i) { return singleRoomCard(r, i); }).join('') +'</div>';
+          }
+          if (packages.length) {
+            html += '<div class="opt-grid">'+ packages.map(function(p, i) { return packageCard(p, i + rooms.length); }).join('') +'</div>';
+          }
+          el('optionsArea').innerHTML = html;
         }
       }
     } catch(err){

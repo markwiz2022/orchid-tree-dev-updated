@@ -340,6 +340,7 @@
         subtotal: subtotal,               // pre-tax; guest.html adds 18%
         perNightTotal: subtotal / g.nights,
         cover: cover,
+        images: breakdown.map(function(b) { return b.image; }).filter(Boolean),
       });
     });
 
