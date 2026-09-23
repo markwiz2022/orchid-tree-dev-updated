@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1064,10 +1064,48 @@
       l.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
 
-    function doConfirm(){
-      booking = S.markConfirmed(booking.id);
-      renderCtas();
-      window.scrollTo({top: document.querySelector('.side').offsetTop - 24, behavior:'smooth'});
+    async function doConfirm(){
+      const btn = document.getElementById('cbtn');
+      btn.disabled = true;
+      btn.textContent = 'Confirming with Resort...';
+
+      try {
+        const res = await fetch('/api/create-booking', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            checkin: booking.stay.checkIn,
+            checkout: booking.stay.checkOut,
+            adults: booking.guestMix.adults,
+            children: booking.guestMix.children,
+            guestName: booking.guest.name,
+            guestPhone: booking.guest.whatsapp || booking.guest.phone,
+            guestEmail: booking.guest.email || "guest@orchidtree.in",
+            roomIds: booking.roomIds,
+            subtotal: booking.pricing.roomSubtotal
+          })
+        });
+
+        const data = await res.json();
+        if (data.status === true && data.bookingId) {
+          booking.sfBookingId = data.bookingId;
+          S.markConfirmed(booking.id);
+          
+          const successUrl = encodeURIComponent(window.location.origin + '/guest.html?b=' + booking.token);
+          const sfPayUrl = `https://bookingengine.stayflexi.com/redirect-payment-gateway/${data.bookingId}?hotel_id=25068&redirect_url=${successUrl}&cancel_url=${successUrl}`;
+          
+          window.location.href = sfPayUrl;
+          return;
+        } else {
+          alert("Booking failed: " + (data.message || 'Unknown error'));
+        }
+      } catch (e) {
+        console.error(e);
+        alert("Network error. Please try again.");
+      }
+
+      btn.disabled = false;
+      btn.textContent = 'Confirm booking';
     }
     function doDecline(){
       if(!confirm('Decline this offer? You can always contact the resort to revisit.')) return;
