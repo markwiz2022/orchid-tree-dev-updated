@@ -25,9 +25,19 @@ export default async function handler(req, res) {
     ratePlanId: "30251" // Default standard rate plan for now
   }));
 
+  // Helper to convert YYYY-MM-DD to DD-MM-YYYY
+  const formatSfDate = (dateStr, timeStr) => {
+    if (!dateStr) return "";
+    const parts = dateStr.split('-');
+    if (parts.length === 3) {
+      return `${parts[2]}-${parts[1]}-${parts[0]} ${timeStr}`;
+    }
+    return `${dateStr} ${timeStr}`;
+  };
+
   const payload = {
-    checkin: checkin + " 13:00:00",
-    checkout: checkout + " 11:00:00",
+    checkin: formatSfDate(checkin, "13:00:00"),
+    checkout: formatSfDate(checkout, "11:00:00"),
     hotelId: HOTEL_ID,
     bookingStatus: "CONFIRMED",
     bookingSource: "STAYFLEXI_OD",
