@@ -56,7 +56,7 @@ export default async function handler(req, res) {
     requestToBook: false,
     isAddOnPresent: false,
     isInsured: false,
-    isEnquiry: false,
+    isEnquiry: true, // MUST BE TRUE for Pay-Now flows to wait for payment
     isExternalPayment: false
   };
 
