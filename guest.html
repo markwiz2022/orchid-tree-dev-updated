@@ -1065,9 +1065,11 @@
     }
 
     async function doConfirm(){
-      const btn = document.getElementById('cbtn');
-      btn.disabled = true;
-      btn.textContent = 'Confirming with Resort...';
+      const btn = document.getElementById('confirmBtn');
+      const mobileBtn = document.getElementById('mobileCbtn'); // there's also a mobile button
+      
+      if (btn) { btn.classList.add('busy'); btn.textContent = 'Confirming with Resort...'; }
+      if (mobileBtn) { mobileBtn.disabled = true; mobileBtn.textContent = 'Confirming...'; }
 
       try {
         const res = await fetch('/api/create-booking', {
@@ -1104,8 +1106,8 @@
         alert("Network error. Please try again.");
       }
 
-      btn.disabled = false;
-      btn.textContent = 'Confirm booking';
+      if (btn) { btn.classList.remove('busy'); btn.textContent = 'Agree to invoice & confirm'; }
+      if (mobileBtn) { mobileBtn.disabled = false; mobileBtn.textContent = 'Confirm booking'; }
     }
     function doDecline(){
       if(!confirm('Decline this offer? You can always contact the resort to revisit.')) return;
