@@ -428,7 +428,7 @@
   <script src="shared/store.js"></script>
   <script src="shared/packages.js"></script>
   <script>
-  (function(){
+  (async function(){
     var S  = window.OrchidStore;
     var P  = window.OrchidPackages;
     var CT = window.OrchidContent;
@@ -660,6 +660,12 @@
     // ---- branch + render --------------------------------------------------
     var rendered;
     try {
+      el('optionsArea').innerHTML = '<div style="text-align:center; padding:4rem 1rem;"><div class="spinner" style="margin: 0 auto 1rem; width: 32px; height: 32px; border: 3px solid rgba(0,0,0,0.1); border-top-color: #2b3a2f; border-radius: 50%; animation: spin 1s linear infinite;"></div><p style="font-family: \'Playfair Display\', serif; font-size: 1.25rem; color: #2b3a2f;">Checking live availability with the resort...</p><style>@keyframes spin { to { transform: rotate(360deg); } }</style></div>';
+      
+      if (P.fetchLiveInventory) {
+        await P.fetchLiveInventory(inParam, outParam, group.adults, group.children);
+      }
+
       // Force the algorithm to dictate room display: completely ignore any forced 'room' param
       // so users always see the strictly prioritized recommendations (e.g. Tulsi).
       var activeRoom = null;

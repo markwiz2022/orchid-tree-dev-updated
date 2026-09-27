@@ -349,6 +349,31 @@
     return out;
   }
 
+  // --- fetchLiveInventory: pulls real-time pricing and availability from backend --
+  async function fetchLiveInventory(checkin, checkout, adults, children) {
+    try {
+      var res = await fetch('/api/availability?checkin=' + checkin + '&checkout=' + checkout + '&adults=' + (adults||2) + '&children=' + (children||0));
+      if (!res.ok) throw new Error("API returned " + res.status);
+      var liveData = await res.json();
+      
+      // Update our static objects with live data
+      Object.keys(liveData).forEach(function(type) {
+        if (ROOM_PRICES[type] != null && liveData[type].price > 0) {
+          ROOM_PRICES[type] = liveData[type].price;
+        }
+        if (TYPE_META[type]) {
+          TYPE_META[type].count = liveData[type].count;
+          TYPE_META[type].roomIds = liveData[type].roomIds || [];
+          TYPE_META[type].price = liveData[type].price;
+        }
+      });
+      return liveData;
+    } catch(e) {
+      console.error("Failed to fetch live inventory:", e);
+      return null;
+    }
+  }
+
   window.OrchidPackages = {
     ROOM_PRICES: ROOM_PRICES,
     TYPE_META: TYPE_META,
@@ -358,5 +383,6 @@
     allocate: allocate,
     priceOf: priceOf,
     groupTotal: function (g) { return groupTotal(normGroup(g)); },
+    fetchLiveInventory: fetchLiveInventory,
   };
 })();
