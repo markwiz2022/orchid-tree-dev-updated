@@ -591,7 +591,6 @@
   <script src="shared/catalog.js"></script>
   <script src="shared/content.js"></script>
   <script src="shared/store.js"></script>
-  <script src="shared/otp.js"></script>
   <script src="shared/nav.js" defer></script>
   <script>
   (function(){
@@ -916,88 +915,91 @@
       var g = booking.guest || {};
       if(g.phoneVerified){
         gb.innerHTML =
-          '<div class="guest-row"><span>Name</span><strong>'+esc(g.name||'—')+'</strong></div>'+
-          '<div class="guest-row"><span>Phone</span><span class="gval"><strong>'+esc(g.phone||g.whatsapp||'')+'</strong><span class="vbadge">✓ Verified</span></span></div>'+
+          '<div class="guest-row"><span>Name</span><strong>'+esc(g.name||'-')+'</strong></div>'+
+          '<div class="guest-row"><span>Phone</span><span class="gval"><strong>'+esc(g.phone||g.whatsapp||'')+'</strong><span class="vbadge"> Verified</span></span></div>'+
           (g.email ? '<div class="guest-row"><span>Email</span><strong>'+esc(g.email)+'</strong></div>' : '');
         return;
       }
       gb.innerHTML =
         '<div class="gform">'+
           '<div id="gStep1">'+
-            '<p class="gnote" style="margin-bottom:10px;">Add your details to confirm. We verify your number so the team can reach you about your stay.</p>'+
+            '<p class="gnote" style="margin-bottom:10px;">Add your details to confirm your stay.</p>'+
             '<div class="gfield"><span class="gfield-lbl">Full name</span><input type="text" id="gfName" placeholder="Your name" autocomplete="name"></div>'+
             '<div class="gfield" style="margin-top:10px;"><span class="gfield-lbl">Email</span><input type="email" id="gfEmail" placeholder="you@email.com" autocomplete="email"></div>'+
             '<div class="gfield" style="margin-top:10px;"><span class="gfield-lbl">Phone</span><div class="gphone"><span class="cc">+91</span><input type="tel" id="gfPhone" inputmode="numeric" maxlength="10" placeholder="98765 43210" autocomplete="tel-national"></div></div>'+
             '<div class="gerr" id="gfErr1" style="margin-top:8px;"></div>'+
-            '<span class="btn primary" id="gfSend">Send verification code</span>'+
+            '<span class="btn primary" id="gfSend">Continue</span>'+
           '</div>'+
           '<div id="gStep2" hidden>'+
-            '<p class="gsent">Code sent to <strong id="gfSentTo"></strong> · <button type="button" class="glink" id="gfEdit">Edit</button></p>'+
-            '<div class="gfield gcode" style="margin-top:10px;"><span class="gfield-lbl">6-digit code</span><input type="text" id="gfCode" inputmode="numeric" maxlength="6" placeholder="••••••" autocomplete="one-time-code"></div>'+
-            '<div class="gdemo" id="gfDemo" hidden style="margin-top:10px;"></div>'+
+            '<p class="gfield-lbl">Security Check</p>'+
+            '<p style="font-size:14px; margin-bottom:8px; line-height: 1.4;">Please solve this quick math problem to prove you are human.</p>'+
+            '<div class="gfield" style="margin-top:10px;">'+
+              '<label for="gfCaptcha" id="gfCaptchaLabel" style="font-size:24px; font-weight:bold; letter-spacing:2px; text-align:center; background:#e7e1d4; padding:12px; border-radius:8px; display:block; color:var(--ink);"></label>'+
+              '<input type="number" id="gfCaptcha" inputmode="numeric" placeholder="Enter answer here" style="margin-top: 10px; text-align:center; font-size: 18px;">'+
+            '</div>'+
             '<div class="gerr" id="gfErr2" style="margin:8px 0;"></div>'+
-            '<span class="btn primary" id="gfVerify">Verify number</span>'+
-            '<button type="button" class="glink" id="gfResend" style="display:block;margin-top:12px;">Resend code</button>'+
+            '<span class="btn primary" id="gfVerify">Verify & Continue</span>'+
+            '<button type="button" class="glink" id="gfEdit" style="display:block;margin-top:12px;">&larr; Back to details</button>'+
           '</div>'+
         '</div>';
       wireGuestForm();
     }
 
     function wireGuestForm(){
-      var OTP = window.OrchidOtp; if(!OTP) return;
       var d = function(s){ return String(s||'').replace(/\D/g,''); };
       var validEmail = function(s){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s); };
       var pretty = function(p){ return '+91 ' + p.slice(0,5) + ' ' + p.slice(5); };
       var g = function(id){ return document.getElementById(id); };
       var cur = { name:'', email:'', phone:'' };
-      var timer = null;
+      var captchaAns = 0;
 
       g('gfPhone').addEventListener('input', function(){ this.value = d(this.value).slice(0,10); });
-      g('gfCode').addEventListener('input', function(){ this.value = d(this.value).slice(0,6); });
 
       function step(n){ g('gStep1').hidden = n!==1; g('gStep2').hidden = n!==2; }
-      function cooldown(){
-        var b = g('gfResend'), left = 30; b.disabled = true; b.textContent = 'Resend in '+left+'s';
-        if(timer) clearInterval(timer);
-        timer = setInterval(function(){ left--; if(left<=0){ clearInterval(timer); timer=null; b.disabled=false; b.textContent='Resend code'; } else b.textContent='Resend in '+left+'s'; }, 1000);
+      
+      function generateCaptcha() {
+        var n1 = Math.floor(Math.random() * 10) + 1;
+        var n2 = Math.floor(Math.random() * 10) + 1;
+        captchaAns = n1 + n2;
+        g('gfCaptchaLabel').textContent = "What is " + n1 + " + " + n2 + "?";
+        g('gfCaptcha').value = '';
       }
+
       function send(){
         var name = g('gfName').value.trim(), email = g('gfEmail').value.trim(), phone = d(g('gfPhone').value);
         if(name.length < 2){ g('gfErr1').textContent='Please enter your name.'; g('gfName').focus(); return; }
         if(!validEmail(email)){ g('gfErr1').textContent='Please enter a valid email.'; g('gfEmail').focus(); return; }
         if(phone.length !== 10){ g('gfErr1').textContent='Please enter a valid 10-digit number.'; g('gfPhone').focus(); return; }
         g('gfErr1').textContent='';
-        var res = OTP.send(phone);
-        if(!res.ok){ g('gfErr1').textContent='Could not send the code. Check the number.'; return; }
+        
         cur = { name:name, email:email, phone:phone };
-        g('gfSentTo').textContent = pretty(phone);
-        var demo = g('gfDemo');
-        if(OTP.MOCK && res.demoCode){ demo.hidden=false; demo.innerHTML='Demo mode — your code is <strong>'+esc(res.demoCode)+'</strong>'; } else demo.hidden=true;
-        step(2); cooldown(); setTimeout(function(){ g('gfCode').focus(); }, 50);
+        generateCaptcha();
+        step(2); setTimeout(function(){ g('gfCaptcha').focus(); }, 50);
       }
+      
       function verify(){
-        var code = d(g('gfCode').value);
-        if(code.length !== 6){ g('gfErr2').textContent='Enter the 6-digit code.'; return; }
-        var res = OTP.verify(cur.phone, code);
-        if(res.ok){
-          if(timer){ clearInterval(timer); timer=null; }
-          booking = S.update(booking.id, { guest: { name: cur.name, email: cur.email, phone: pretty(cur.phone), whatsapp: pretty(cur.phone), phoneVerified: true } });
-          renderGuestBlock();
-          renderCtas();
-          return;
+        var ans = parseInt(g('gfCaptcha').value, 10);
+        if(isNaN(ans) || ans !== captchaAns){ 
+          g('gfErr2').textContent = 'Incorrect answer. Please try again.'; 
+          generateCaptcha();
+          g('gfCaptcha').focus();
+          return; 
         }
-        if(res.reason === 'mismatch'){ g('gfErr2').textContent="That code doesn't match. Try again."; g('gfCode').value=''; g('gfCode').focus(); }
-        else if(res.reason === 'expired'){ g('gfErr1').textContent='That code expired. Request a new one.'; step(1); }
-        else if(res.reason === 'too_many'){ g('gfErr1').textContent='Too many attempts. Request a new code.'; step(1); }
-        else { g('gfErr1').textContent='Please request a code first.'; step(1); }
+        booking = S.update(booking.id, { guest: { name: cur.name, email: cur.email, phone: pretty(cur.phone), whatsapp: pretty(cur.phone), phoneVerified: true } });
+        renderGuestBlock();
+        renderCtas();
       }
+
       g('gfSend').addEventListener('click', send);
       g('gfVerify').addEventListener('click', verify);
       g('gfEdit').addEventListener('click', function(){ step(1); g('gfPhone').focus(); });
-      g('gfResend').addEventListener('click', function(){ if(!g('gfResend').disabled) send(); });
+
+      g('gfName').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); send(); } });
+      g('gfEmail').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); send(); } });
       g('gfPhone').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); send(); } });
-      g('gfCode').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); verify(); } });
+      g('gfCaptcha').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); verify(); } });
     }
+
 
     // nudge the guest up to the details form if they try to confirm unverified
     function flashGuestBlock(){
