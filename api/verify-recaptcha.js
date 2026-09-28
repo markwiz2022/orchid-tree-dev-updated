@@ -2,7 +2,7 @@ export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
 
   const { token } = req.body;
-  const secretKey = process.env.RECAPTCHA_SECRET_KEY || '6LcfodMtAAAAAB7WGpV01p4kSBdnWEO78CGD6Yud';
+  const secretKey = process.env.RECAPTCHA_SECRET_KEY || '6LfKp9MtAAAAADVYPLWkzbxFC8W0v5ERpPnEKB4d';
 
   try {
     const response = await fetch('https://www.google.com/recaptcha/api/siteverify', {
