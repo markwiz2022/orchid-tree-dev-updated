@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Mulish:wght@400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <style>
   /* ── Styles ported verbatim from orchidtree-dynamic-page-wireframe.html ──
      (demo .controls / .toggle styles dropped; not-found + state styles added) */
@@ -932,10 +933,9 @@
           '</div>'+
           '<div id="gStep2" hidden>'+
             '<p class="gfield-lbl">Security Check</p>'+
-            '<p style="font-size:14px; margin-bottom:8px; line-height: 1.4;">Please solve this quick math problem to prove you are human.</p>'+
-            '<div class="gfield" style="margin-top:10px;">'+
-              '<label for="gfCaptcha" id="gfCaptchaLabel" style="font-size:24px; font-weight:bold; letter-spacing:2px; text-align:center; background:#e7e1d4; padding:12px; border-radius:8px; display:block; color:var(--ink);"></label>'+
-              '<input type="number" id="gfCaptcha" inputmode="numeric" placeholder="Enter answer here" style="margin-top: 10px; text-align:center; font-size: 18px;">'+
+            '<p style="font-size:14px; margin-bottom:12px; line-height: 1.4;">Please verify you are human to proceed to payment.</p>'+
+            '<div class="gfield" style="margin-top:10px; display:flex; justify-content:center; overflow:hidden;">'+
+              '<div class="g-recaptcha" data-sitekey="6LcfodMtAAAAANVapeSXxDaC9T_3LSye0QTetiVU"></div>'+
             '</div>'+
             '<div class="gerr" id="gfErr2" style="margin:8px 0;"></div>'+
             '<span class="btn primary" id="gfVerify">Verify & Continue</span>'+
@@ -951,20 +951,18 @@
       var pretty = function(p){ return '+91 ' + p.slice(0,5) + ' ' + p.slice(5); };
       var g = function(id){ return document.getElementById(id); };
       var cur = { name:'', email:'', phone:'' };
-      var captchaAns = 0;
 
       g('gfPhone').addEventListener('input', function(){ this.value = d(this.value).slice(0,10); });
 
-      function step(n){ g('gStep1').hidden = n!==1; g('gStep2').hidden = n!==2; }
-      
-      function generateCaptcha() {
-        var n1 = Math.floor(Math.random() * 10) + 1;
-        var n2 = Math.floor(Math.random() * 10) + 1;
-        captchaAns = n1 + n2;
-        g('gfCaptchaLabel').textContent = "What is " + n1 + " + " + n2 + "?";
-        g('gfCaptcha').value = '';
+      function step(n){ 
+        g('gStep1').hidden = n!==1; 
+        g('gStep2').hidden = n!==2; 
+        if (n === 2 && window.grecaptcha && window.grecaptcha.render) {
+            // Re-render explicitly if needed (usually auto-rendered by api.js)
+            try { window.grecaptcha.reset(); } catch(e) {}
+        }
       }
-
+      
       function send(){
         var name = g('gfName').value.trim(), email = g('gfEmail').value.trim(), phone = d(g('gfPhone').value);
         if(name.length < 2){ g('gfErr1').textContent='Please enter your name.'; g('gfName').focus(); return; }
@@ -973,21 +971,48 @@
         g('gfErr1').textContent='';
         
         cur = { name:name, email:email, phone:phone };
-        generateCaptcha();
-        step(2); setTimeout(function(){ g('gfCaptcha').focus(); }, 50);
+        step(2);
       }
       
-      function verify(){
-        var ans = parseInt(g('gfCaptcha').value, 10);
-        if(isNaN(ans) || ans !== captchaAns){ 
-          g('gfErr2').textContent = 'Incorrect answer. Please try again.'; 
-          generateCaptcha();
-          g('gfCaptcha').focus();
-          return; 
+      async function verify(){
+        var token = window.grecaptcha ? grecaptcha.getResponse() : '';
+        if (!token) {
+          g('gfErr2').textContent = 'Please check the box to prove you are human.';
+          return;
         }
-        booking = S.update(booking.id, { guest: { name: cur.name, email: cur.email, phone: pretty(cur.phone), whatsapp: pretty(cur.phone), phoneVerified: true } });
-        renderGuestBlock();
-        renderCtas();
+
+        var btn = g('gfVerify');
+        btn.textContent = 'Verifying...';
+        btn.style.opacity = '0.7';
+        btn.style.pointerEvents = 'none';
+        
+        try {
+          var res = await fetch('/api/verify-recaptcha', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: token })
+          });
+          var data = await res.json();
+          
+          if (data.success) {
+            booking = S.update(booking.id, { guest: { name: cur.name, email: cur.email, phone: pretty(cur.phone), whatsapp: pretty(cur.phone), phoneVerified: true } });
+            renderGuestBlock();
+            renderCtas();
+          } else {
+            g('gfErr2').textContent = 'Verification failed. Please try again.';
+            if (window.grecaptcha) grecaptcha.reset();
+            btn.textContent = 'Verify & Continue';
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+          }
+        } catch(e) {
+          console.error(e);
+          g('gfErr2').textContent = 'Network error. Please try again.';
+          if (window.grecaptcha) grecaptcha.reset();
+          btn.textContent = 'Verify & Continue';
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+        }
       }
 
       g('gfSend').addEventListener('click', send);
@@ -997,7 +1022,6 @@
       g('gfName').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); send(); } });
       g('gfEmail').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); send(); } });
       g('gfPhone').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); send(); } });
-      g('gfCaptcha').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); verify(); } });
     }
 
 

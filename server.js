@@ -22,11 +22,13 @@ import availabilityHandler from './api/availability.js';
 import createBookingHandler from './api/create-booking.js';
 import razorpayOrderHandler from './api/razorpay-order.js';
 import confirmPaymentHandler from './api/confirm-payment.js';
+import verifyRecaptchaHandler from './api/verify-recaptcha.js';
 
 app.all('/api/availability', availabilityHandler);
 app.all('/api/create-booking', createBookingHandler);
 app.all('/api/razorpay-order', razorpayOrderHandler);
 app.all('/api/confirm-payment', confirmPaymentHandler);
+app.all('/api/verify-recaptcha', verifyRecaptchaHandler);
 
 // Serve Static Frontend Files
 app.use(express.static(__dirname));
