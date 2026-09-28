@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Mulish:wght@400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
   /* ── Styles ported verbatim from orchidtree-dynamic-page-wireframe.html ──
      (demo .controls / .toggle styles dropped; not-found + state styles added) */
@@ -1091,12 +1092,72 @@
         const data = await res.json();
         if (data.status === true && data.bookingId) {
           booking.sfBookingId = data.bookingId;
-          S.markConfirmed(booking.id);
           
-          const successUrl = encodeURIComponent(window.location.origin + '/guest.html?b=' + booking.token);
-          const sfPayUrl = `https://bookingengine.stayflexi.com/redirect-payment-gateway/${data.bookingId}?hotel_id=25068&redirect_url=${successUrl}&cancel_url=${successUrl}`;
+          if (btn) btn.textContent = 'Generating Secure Checkout...';
           
-          window.location.href = sfPayUrl;
+          // Calculate total amount including taxes to charge guest
+          const taxRate = 0.18;
+          const taxes = Math.round(booking.pricing.roomSubtotal * taxRate);
+          const totalAmount = booking.pricing.roomSubtotal + taxes;
+
+          // Call our Vercel backend to create a Razorpay order
+          const rzpRes = await fetch('/api/razorpay-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount: totalAmount })
+          });
+          const rzpData = await rzpRes.json();
+          
+          if (!rzpData.id) {
+            alert("Failed to generate payment gateway order. Please try again.");
+            if (btn) { btn.classList.remove('busy'); btn.textContent = 'Agree to invoice & confirm'; }
+            if (mobileBtn) { mobileBtn.disabled = false; mobileBtn.textContent = 'Confirm booking'; }
+            return;
+          }
+
+          var options = {
+            "key": "rzp_live_ThKViVSs1B9jNs",
+            "amount": rzpData.amount, // in paise
+            "currency": "INR",
+            "name": "Orchid Tree",
+            "description": "Room Booking",
+            "order_id": rzpData.id,
+            "handler": async function (response) {
+              if (btn) { btn.textContent = 'Securing Booking...'; btn.classList.add('busy'); }
+              try {
+                const confRes = await fetch('/api/confirm-payment', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    bookingId: data.bookingId,
+                    paymentId: response.razorpay_payment_id,
+                    amount: totalAmount
+                  })
+                });
+                const confData = await confRes.json();
+                
+                S.markConfirmed(booking.id);
+                location.reload(); // Reload to show confirmed state
+              } catch (e) {
+                console.error('Payment confirmation error', e);
+                alert("Payment received, but failed to confirm booking. Please contact the resort.");
+              }
+            },
+            "prefill": {
+              "name": booking.guest.name,
+              "email": booking.guest.email || "guest@orchidtree.in",
+              "contact": booking.guest.whatsapp || booking.guest.phone
+            },
+            "theme": { "color": "#2b3a2f" },
+            "modal": {
+              "ondismiss": function() {
+                 if (btn) { btn.classList.remove('busy'); btn.textContent = 'Agree to invoice & confirm'; }
+                 if (mobileBtn) { mobileBtn.disabled = false; mobileBtn.textContent = 'Confirm booking'; }
+              }
+            }
+          };
+          var rzp1 = new Razorpay(options);
+          rzp1.open();
           return;
         } else {
           alert("Booking failed: " + (data.message || 'Unknown error'));
