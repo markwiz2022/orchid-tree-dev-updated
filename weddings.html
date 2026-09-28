@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -999,10 +999,8 @@
           <textarea id="enqVision" name="vision" placeholder="The feeling you are after"></textarea>
         </div>
         <button type="submit" class="enquiry-submit">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2zm5.2 14.1c-.2.6-1.2 1.1-1.7 1.2-.4.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.5-2.6-1.1-4.3-3.8-4.5-4-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.7.7 1.8.1.1.1.3 0 .4l-.3.5c-.1.2-.3.4-.1.7.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.8c.2-.2.4-.2.6-.1l1.6.8c.2.1.4.2.5.3.1.2.1.5-.1 1z"/></svg>
-          Book my private visit
+          Book my private visit via Email
         </button>
-        <p class="alt">or <a id="enqEmailBtn">send it by email</a> instead</p>
         <p class="fineprint">This is an enquiry, not a booking. No budget field on the first touch. We read every one and reply by hand.</p>
       </form>
     </div>
@@ -1213,8 +1211,9 @@
     if(form){
       form.addEventListener('submit', function(ev){
         ev.preventDefault();
-        var url = 'https://wa.me/918088251913?text=' + encodeURIComponent(buildMessage());
-        window.open(url, '_blank', 'noopener');
+        var url = 'mailto:orchidtree.blr@gmail.com?subject=' + encodeURIComponent('Wedding event enquiry')
+          + '&body=' + encodeURIComponent(buildMessage());
+        window.location.href = url;
       });
     }
     var emailLink = document.getElementById('enqEmailBtn');
