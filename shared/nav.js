@@ -13,6 +13,12 @@
    their own inline stylesheet, and one source beats fourteen copies.
    ========================================================================== */
 (function () {
+
+  // Force redirect from Vercel to official domain
+  if (window.location.hostname.indexOf('vercel.app') !== -1) {
+    window.location.href = window.location.href.replace(window.location.hostname, 'orchidtree.in');
+  }
+
   var BREAKPOINT = 820;   // matches the `.nav .links{display:none}` query
   var CSS = [
     /* burger button — hidden on desktop, 44px touch target on mobile */
