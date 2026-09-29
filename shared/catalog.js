@@ -60,7 +60,7 @@
         { label: "Climate", value: "Fully air conditioned" },
         { label: "Pets", value: "Pet friendly" },
       ],
-      priceFrom: 13000, // the only published price; room and massage
+      priceFrom: null, // the only published price; room and massage
     },
     "Family Room by the Pool": {
       tagline: "Spacious Comfort by the Pool",

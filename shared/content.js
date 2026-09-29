@@ -55,7 +55,7 @@
         { k: "Award-winning architect", v: "A private nature estate" },
         { k: "Calm over crowds", v: "Only eleven rooms" },
       ],
-      rating: { score: "4.4", stars: 4, text: "615+ Google reviews" },
+      rating: { score: "4.4", stars: 4, text: "670+ Google reviews" },
     },
 
     // wellness band — massage is an optional add-on, pre-booked like meals.
@@ -166,7 +166,7 @@
     // where you will be (closing band). Distance is public; exact address is post-booking.
     location: {
       eyebrow: "Where you will be",
-      body: "About 45 minutes from Whitefield, Bengaluru, and quiet the moment you turn in. The estate is yours while you are here. We share the exact location once your stay is confirmed, for privacy.",
+      body: "About 45 minutes from Whitefield, Bengaluru, and quiet the moment you turn in. The estate is yours while you are here. Directions and arrival instructions are shared with your booking confirmation, so getting here is simple.",
     },
 
     // what the rate covers (booking card) — two variants by whether a food credit is set
@@ -213,7 +213,7 @@
     ],
 
     // heading for the dedicated reviews band
-    reviewsTitle: "4.4 from 615+ guests",
+    reviewsTitle: "4.4 from 670+ Google reviews",
 
     // which review shows where (by id). Inline placements are single ids;
     // `section` is an array shown together in the "What guests say" band.
