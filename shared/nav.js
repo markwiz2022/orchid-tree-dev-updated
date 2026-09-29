@@ -14,11 +14,6 @@
    ========================================================================== */
 (function () {
 
-  // Force redirect from Vercel to official domain
-  if (window.location.hostname.indexOf('vercel.app') !== -1) {
-    window.location.href = window.location.href.replace(window.location.hostname, 'orchidtree.in');
-  }
-
   var BREAKPOINT = 820;   // matches the `.nav .links{display:none}` query
   var CSS = [
     /* burger button — hidden on desktop, 44px touch target on mobile */
@@ -143,4 +138,16 @@
   } else {
     init();
   }
+
+  // Mouseflow Tracking (Disabled on Vercel preview)
+  if (window.location.hostname.indexOf('vercel.app') === -1) {
+    window._mfq = window._mfq || [];
+    (function() {
+      var mf = document.createElement("script");
+      mf.type = "text/javascript"; mf.defer = true;
+      mf.src = "//cdn.mouseflow.com/projects/3bd0c727-dcd7-4e63-b077-603170ced523.js";
+      document.getElementsByTagName("head")[0].appendChild(mf);
+    })();
+  }
+
 })();
