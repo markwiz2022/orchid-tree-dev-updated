@@ -3,3 +3,6 @@
 
 # Generated Vercel deploy mirror (recreated by deploy.sh)
 .deploy/
+
+# Contentsquare wizard (generated)
+.cs-wizard/
