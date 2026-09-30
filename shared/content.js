@@ -197,7 +197,7 @@
     policies: [
       "Your booking is confirmed once the full amount is paid on this page.",
       "Full refund if cancelled 48 hours or more before check-in. No refund after that.",
-      "Couple Rooms sleep 2 adults + 1 child up to 8 years, on one queen bed. No extra bed.",
+      "Couple Rooms sleep 2 adults + 1 child up to 8 years on existing bedding. Children aged 7–8 may incur applicable charges.",
       "Plated meals only. No outside food. No room service.",
       "We do not sell alcohol. Personal beverages only in designated areas.",
       "Pets are welcome only in pet-friendly rooms and must be leashed in common areas.",
