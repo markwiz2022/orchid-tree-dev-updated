@@ -147,7 +147,19 @@
       mf.type = "text/javascript"; mf.defer = true;
       mf.src = "//cdn.mouseflow.com/projects/3bd0c727-dcd7-4e63-b077-603170ced523.js";
       document.getElementsByTagName("head")[0].appendChild(mf);
-    })();
+    
+  // Redirect old room URLs
+  if (window.location.pathname.indexOf('/stays/') !== -1) {
+    window.location.href = '/stays.html';
+  }
+
+})();
+  }
+
+
+  // Redirect old room URLs
+  if (window.location.pathname.indexOf('/stays/') !== -1) {
+    window.location.href = '/stays.html';
   }
 
 })();
