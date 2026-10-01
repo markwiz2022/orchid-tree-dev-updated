@@ -31,6 +31,10 @@ app.all('/api/confirm-payment', confirmPaymentHandler);
 app.all('/api/verify-recaptcha', verifyRecaptchaHandler);
 
 // Serve Static Frontend Files
+app.get('/home(.html)?', (req, res) => {
+  res.redirect(301, '/');
+});
+
 app.use(express.static(__dirname));
 
 // Fallback for HTML routing

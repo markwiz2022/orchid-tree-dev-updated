@@ -1,19 +1,17 @@
 ﻿import os
 
-filepath = 'shared/nav.js'
-with open(filepath, 'r', encoding='utf-8') as f:
-    text = f.read()
-
-redirect_snippet = '''
-  // Redirect old room URLs
-  if (window.location.pathname.indexOf('/stays/') !== -1) {
-    window.location.href = '/stays.html';
-  }
-'''
-
-if 'Redirect old room URLs' not in text:
-    text = text.replace('})();', redirect_snippet + '\n})();')
-
-with open(filepath, 'w', encoding='utf-8') as f:
-    f.write(text)
+files = ['home.html', 'orchidtree-home-wireframe.html']
+for f in files:
+    if not os.path.exists(f): continue
+    with open(f, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+    
+    # insert redirect right after <head>
+    for i, line in enumerate(lines):
+        if '<head>' in line:
+            lines.insert(i+1, '  <script>window.location.replace("/");</script>\n  <meta http-equiv="refresh" content="0; url=/" />\n')
+            break
+            
+    with open(f, 'w', encoding='utf-8') as file:
+        file.writelines(lines)
 
