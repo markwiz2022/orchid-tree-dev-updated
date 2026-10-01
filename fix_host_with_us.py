@@ -1,66 +1,17 @@
 ﻿import os
+import re
 
-file_path = 'host-with-us.html'
-with open(file_path, 'r', encoding='utf-8') as f:
-    content = f.read()
+f = 'host-with-us.html'
+with open(f, 'r', encoding='utf-8') as file:
+    c = file.read()
 
-replacements = [
-    (
-        "Two spaces, indoor and open air &nbsp;·&nbsp; <b>Up to 60</b> day guests, <b>34</b> overnight &nbsp;·&nbsp; Calm over crowds, always",
-        "45 min from Whitefield &nbsp;·&nbsp; 11 rooms onsite &nbsp;·&nbsp; Corporate/private gatherings up to 60 &nbsp;·&nbsp; Weddings up to 200"
-    ),
-    (
-        "Two spaces, indoor and open air &nbsp;&nbsp; <b>Up to 60</b> day guests, <b>34</b> overnight &nbsp;&nbsp; Calm over crowds, always",
-        "45 min from Whitefield &nbsp;&nbsp; 11 rooms onsite &nbsp;&nbsp; Corporate/private gatherings up to 60 &nbsp;&nbsp; Weddings up to 200"
-    ),
-    (
-        "The Multi-Purpose Hall",
-        "Gulmohar Hall"
-    ),
-    (
-        "The Open Movement Stage",
-        "Baobab Court"
-    ),
-    (
-        "Multi-purpose hall",
-        "Gulmohar Hall"
-    ),
-    (
-        "multi-purpose AV hall",
-        "Gulmohar AV Hall"
-    ),
-    (
-        "an open movement stage",
-        "Baobab Court"
-    ),
-    (
-        "Bachelors party",
-        "Private celebrations"
-    ),
-    (
-        "bachelor parties",
-        "private celebrations"
-    ),
-    (
-        "Or look around the <a href=\"home.html#rooms\">estate and its rooms</a> and the.",
-        "Or look around the <a href=\"index.html#rooms\">estate and its rooms</a>."
-    ),
-    (
-        "yours to gather in",
-        "ready to gather in"
-    ),
-    (
-        "the whole estate yours for the day",
-        "the estate as your private venue"
-    )
-]
+# Fix stat block
+c = c.replace('<div class="lbl">Overnight at Orchid Tree, up to</div>', '<div class="lbl">Adults overnight at Orchid Tree, up to</div>')
 
-for old, new in replacements:
-    if old in content:
-        content = content.replace(old, new)
-        print(f"Replaced: {old[:30]}...")
-    else:
-        print(f"NOT FOUND: {old[:30]}...")
+# Fix FAQ
+old_faq = '<p>Up to sixty for a daytime gathering and up to thirty-four staying overnight across the eleven rooms. We keep it intimate by design.</p>'
+new_faq = '<p>Up to 60 day guests. For overnight stays, up to 34 adults can stay at Orchid Tree across its 11 rooms. Additional accommodation can bring the combined Orchid Tree + Viva Farm capacity to approximately 60 guests, by arrangement and subject to rooming and availability.</p>'
+c = c.replace(old_faq, new_faq)
 
-with open(file_path, 'w', encoding='utf-8') as f:
-    f.write(content)
+with open(f, 'w', encoding='utf-8') as file:
+    file.write(c)

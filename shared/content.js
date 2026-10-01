@@ -26,7 +26,7 @@
           "No refund for cancellations within 48 hours of check-in, no-shows or early departures.",
         ] },
         { title: "Room occupancy", items: [
-          "Couple Rooms accommodate 2 adults + 1 child (up to 8). Children aged 7-8 may incur an additional charge depending on the room and bedding arrangement.",
+          "Couple Rooms accommodate 2 adults + 1 child (age 0&ndash;8). Children (age 7-8) may incur an additional charge depending on the room and bedding arrangement.",
           "No extra bed, mattress or additional sleeping arrangement is provided.",
         ] },
         { title: "At the property", items: [
@@ -197,7 +197,7 @@
     policies: [
       "Your booking is confirmed once the full amount is paid on this page.",
       "Full refund if cancelled 48 hours or more before check-in. No refund after that.",
-      "Couple Rooms accommodate 2 adults + 1 child (up to 8). Children aged 0–8 can be selected during booking. Children aged 7–8 may incur an additional charge depending on the room and bedding arrangement. Any applicable charge will be shown before booking confirmation.",
+      "Couple Rooms accommodate 2 adults + 1 child (age 0&ndash;8). Children aged 0–8 can be selected during booking. Children aged 7–8 may incur an additional charge depending on the room and bedding arrangement. Any applicable charge will be shown before booking confirmation.",
       "Plated meals only. No outside food. No room service.",
       "We do not sell alcohol. Personal beverages only in designated areas.",
       "Pets are welcome only in pet-friendly rooms and must be leashed in common areas.",
