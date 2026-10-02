@@ -35,6 +35,10 @@ app.get('/home(.html)?', (req, res) => {
   res.redirect(301, '/');
 });
 
+app.get('/restaurant(.html)?', (req, res) => {
+  res.redirect(301, '/blog-farm-to-table-dining-near-bangalore.html');
+});
+
 app.use(express.static(__dirname));
 
 // Fallback for HTML routing

@@ -1,4 +1,4 @@
-﻿{
+{
   "cleanUrls": true,
   "redirects": [
     {
@@ -9,6 +9,16 @@
     {
       "source": "/home",
       "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/restaurant.html",
+      "destination": "/blog-farm-to-table-dining-near-bangalore.html",
+      "permanent": true
+    },
+    {
+      "source": "/restaurant",
+      "destination": "/blog-farm-to-table-dining-near-bangalore.html",
       "permanent": true
     }
   ]
