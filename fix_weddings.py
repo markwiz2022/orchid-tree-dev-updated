@@ -1,24 +1,43 @@
-﻿import os
+import os
+import re
 
 f = 'weddings.html'
 with open(f, 'r', encoding='utf-8') as file:
     c = file.read()
 
-# Arrival 
-old_arrival = '<div class="k">Day 1 &middot; Noon</div><h3>Arrive</h3><p>Rooming, welcome refreshments, lunch and an unhurried afternoon on the estate.</p>'
-new_arrival = '<div class="k">Day 1 &middot; Noon</div><h3>Arrive</h3><p>Wedding guests arrive from noon for welcome refreshments, lunch and the planned wedding programme. Room access follows the agreed event rooming schedule.</p><p style="margin-top:12px; font-size:13px; opacity:0.8;">Standard leisure-stay check-in is from 2 PM. Wedding and event arrival times are planned separately with the event team.</p>'
-c = c.replace(old_arrival, new_arrival)
+c = c.replace(
+    '''<div class="sub">Private, nature-led and eco-conscious. Curated end to end for intimate celebrations of up to 200 guests, with accommodation for up to 60 across Orchid Tree and associated Viva Farm accommodation.</div>''',
+    '''<div class="sub">Private, nature-led and eco-conscious. Curated end to end for intimate celebrations of up to 200 guests, with overnight accommodation for up to 34 adults at Orchid Tree.</div>'''
+)
 
-# Capacity "34 adults" vs "34 guests"
-old_stay = '<p>Up to 34 guests can stay across Orchid Tree\'s 11 rooms.'
-new_stay = '<p>Up to 34 adults can stay across Orchid Tree\'s 11 rooms. Children may be accommodated within the room-specific child limits, subject to rooming and availability.'
-c = c.replace(old_stay, new_stay)
+c = c.replace(
+    '''<p class="muted" style="margin-top:16px;max-width:720px;">Up to 200 celebration guests, with accommodation for approximately 60 resident guests across Orchid Tree and associated Viva Farm accommodation.</p>''',
+    '''<p class="muted" style="margin-top:16px;max-width:720px;">Up to 200 celebration guests, with overnight accommodation for up to 34 adults at Orchid Tree.</p>'''
+)
 
-# Also fix the FAQ in weddings
-old_faq = 'Up to 34 guests can stay at Orchid Tree itself'
-new_faq = 'Up to 34 adults can stay at Orchid Tree itself'
-c = c.replace(old_faq, new_faq)
+old_stats = '''        <div class="stats reveal" id="wStats">
+          <div class="s"><div class="big" data-count="200">200</div><div class="lbl">maximum celebration guests</div></div>
+          <div class="s"><div class="big" data-count="60">60</div><div class="lbl">maximum resident guests</div></div>
+          <div class="s"><div class="big" data-count="34">34</div><div class="lbl">approx. stay at Orchid Tree</div></div>
+          <div class="s"><div class="big" data-count="26">26</div><div class="lbl">approx. stay at Viva Farm</div></div>
+        </div>'''
+
+new_stats = '''        <div class="stats reveal" id="wStats">
+          <div class="s"><div class="big" data-count="200">200</div><div class="lbl">maximum celebration guests</div></div>
+          <div class="s"><div class="big" data-count="34">34</div><div class="lbl">maximum overnight adults</div></div>
+        </div>'''
+
+c = c.replace(old_stats, new_stats)
+
+c = c.replace(
+    '''<div class="eyebrow hair" style="color:var(--gold); margin-bottom:8px;">Overnight accommodation</div><p>Up to 34 adults can stay across Orchid Tree's 11 rooms. Children may be accommodated within the room-specific child limits, subject to rooming and availability. Additional accommodation for up to approximately 60 resident guests can be arranged through associated Viva Farm accommodation, subject to rooming and availability.</p>''',
+    '''<div class="eyebrow hair" style="color:var(--gold); margin-bottom:8px;">Overnight accommodation</div><p>Up to 34 adults can stay across Orchid Tree's 11 rooms. Children may be accommodated within the room-specific child limits, subject to rooming and availability.</p>'''
+)
+
+c = c.replace(
+    '''<div class="faq-item"><button class="faq-q">How many people can stay overnight?<span class="plus">+</span></button><div class="faq-a"><p>Up to 34 adults can stay at Orchid Tree itself, with additional accommodation at Viva Farm bringing the combined resident capacity to approximately 60 guests, subject to rooming and availability. Additional hotel rooms nearby can be coordinated separately.</p></div></div>''',
+    '''<div class="faq-item"><button class="faq-q">How many people can stay overnight?<span class="plus">+</span></button><div class="faq-a"><p>Overnight accommodation is available for up to 34 adults at Orchid Tree. Additional hotel rooms nearby can be coordinated separately.</p></div></div>'''
+)
 
 with open(f, 'w', encoding='utf-8') as file:
     file.write(c)
-
