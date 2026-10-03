@@ -7,8 +7,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Mulish:wght@400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
-
-
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <style>
   /* ── Styles ported verbatim from orchidtree-dynamic-page-wireframe.html ──
      (demo .controls / .toggle styles dropped; not-found + state styles added) */
@@ -932,7 +932,17 @@
             '<div class="gerr" id="gfErr1" style="margin-top:8px;"></div>'+
             '<span class="btn primary" id="gfSend">Continue</span>'+
           '</div>'+
-          '</div>';
+          '<div id="gStep2" hidden>'+
+            '<p class="gfield-lbl">Security Check</p>'+
+            '<p style="font-size:14px; margin-bottom:12px; line-height: 1.4;">Please verify you are human to proceed to payment.</p>'+
+            '<div class="gfield" style="margin-top:10px; display:flex; justify-content:center; overflow:hidden;">'+
+              '<div class="g-recaptcha" data-sitekey="6LfKp9MtAAAAADILeBlHphpcn7miDYH6Un0nu7rN"></div>'+
+            '</div>'+
+            '<div class="gerr" id="gfErr2" style="margin:8px 0;"></div>'+
+            '<span class="btn primary" id="gfVerify">Verify & Continue</span>'+
+            '<button type="button" class="glink" id="gfEdit" style="display:block;margin-top:12px;">&larr; Back to details</button>'+
+          '</div>'+
+        '</div>';
       wireGuestForm();
     }
 
@@ -944,6 +954,13 @@
       var cur = { name:'', email:'', phone:'' };
 
       g('gfPhone').addEventListener('input', function(){ this.value = d(this.value).slice(0,10); });
+
+      function step(n){ 
+        g('gStep1').hidden = n!==1; 
+        g('gStep2').hidden = n!==2; 
+        if (n === 2 && window.grecaptcha && window.grecaptcha.render) {
+            // Re-render explicitly if needed (usually auto-rendered by api.js)
+            try { window.grecaptcha.reset(); } catch(e) {}
         }
       }
       
@@ -954,17 +971,55 @@
         if(phone.length !== 10){ g('gfErr1').textContent='Please enter a valid 10-digit number.'; g('gfPhone').focus(); return; }
         g('gfErr1').textContent='';
         
-        
-        
-          booking = S.update(booking.id, { guest: { name: name, email: email, phone: pretty(phone), whatsapp: pretty(phone), phoneVerified: true } });
-          renderGuestBlock();
-          renderCtas();
+        cur = { name:name, email:email, phone:phone };
+        step(2);
+      }
+      
+      async function verify(){
+        var token = window.grecaptcha ? grecaptcha.getResponse() : '';
+        if (!token) {
+          g('gfErr2').textContent = 'Please check the box to prove you are human.';
+          return;
+        }
 
+        var btn = g('gfVerify');
+        btn.textContent = 'Verifying...';
+        btn.style.opacity = '0.7';
+        btn.style.pointerEvents = 'none';
+        
+        try {
+          var res = await fetch('/api/verify-recaptcha', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ token: token })
+          });
+          var data = await res.json();
+          
+          if (data.success) {
+            booking = S.update(booking.id, { guest: { name: cur.name, email: cur.email, phone: pretty(cur.phone), whatsapp: pretty(cur.phone), phoneVerified: true } });
+            renderGuestBlock();
+            renderCtas();
+          } else {
+            g('gfErr2').textContent = 'Verification failed. Please try again.';
+            if (window.grecaptcha) grecaptcha.reset();
+            btn.textContent = 'Verify & Continue';
+            btn.style.opacity = '1';
+            btn.style.pointerEvents = 'auto';
+          }
+        } catch(e) {
+          console.error(e);
+          g('gfErr2').textContent = 'Network error. Please try again.';
+          if (window.grecaptcha) grecaptcha.reset();
+          btn.textContent = 'Verify & Continue';
+          btn.style.opacity = '1';
+          btn.style.pointerEvents = 'auto';
+        }
       }
 
       g('gfSend').addEventListener('click', send);
-      
-      
+      g('gfVerify').addEventListener('click', verify);
+      g('gfEdit').addEventListener('click', function(){ step(1); g('gfPhone').focus(); });
+
       g('gfName').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); send(); } });
       g('gfEmail').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); send(); } });
       g('gfPhone').addEventListener('keydown', function(e){ if(e.key==='Enter'){ e.preventDefault(); send(); } });
@@ -1066,10 +1121,71 @@
           booking.sfBookingId = data.bookingId;
           
           if (btn) btn.textContent = 'Generating Secure Checkout...';
-            // Bypass Payment Gateway
-            S.markConfirmed(booking.id);
-            location.reload(); 
+          
+          // Calculate total amount including taxes to charge guest
+          const taxRate = 0.18;
+          const taxes = Math.round(booking.pricing.roomSubtotal * taxRate);
+          const totalAmount = booking.pricing.roomSubtotal + taxes;
+
+          // Call our Vercel backend to create a Razorpay order
+          const rzpRes = await fetch('/api/razorpay-order', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ amount: totalAmount })
+          });
+          const rzpData = await rzpRes.json();
+          
+          if (!rzpData.id) {
+            alert("Failed to generate payment gateway order. Please try again.");
+            if (btn) { btn.classList.remove('busy'); btn.textContent = 'Agree to invoice & confirm'; }
+            if (mobileBtn) { mobileBtn.disabled = false; mobileBtn.textContent = 'Confirm booking'; }
             return;
+          }
+
+          var options = {
+            "key": "rzp_live_ThKViVSs1B9jNs",
+            "amount": rzpData.amount, // in paise
+            "currency": "INR",
+            "name": "Orchid Tree",
+            "description": "Room Booking",
+            "order_id": rzpData.id,
+            "handler": async function (response) {
+              if (btn) { btn.textContent = 'Securing Booking...'; btn.classList.add('busy'); }
+              try {
+                const confRes = await fetch('/api/confirm-payment', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    bookingId: data.bookingId,
+                    paymentId: response.razorpay_payment_id,
+                    amount: totalAmount
+                  })
+                });
+                const confData = await confRes.json();
+                
+                S.markConfirmed(booking.id);
+                location.reload(); // Reload to show confirmed state
+              } catch (e) {
+                console.error('Payment confirmation error', e);
+                alert("Payment received, but failed to confirm booking. Please contact the resort.");
+              }
+            },
+            "prefill": {
+              "name": booking.guest.name,
+              "email": booking.guest.email || "guest@orchidtree.in",
+              "contact": booking.guest.whatsapp || booking.guest.phone
+            },
+            "theme": { "color": "#2b3a2f" },
+            "modal": {
+              "ondismiss": function() {
+                 if (btn) { btn.classList.remove('busy'); btn.textContent = 'Agree to invoice & confirm'; }
+                 if (mobileBtn) { mobileBtn.disabled = false; mobileBtn.textContent = 'Confirm booking'; }
+              }
+            }
+          };
+          var rzp1 = new Razorpay(options);
+          rzp1.open();
+          return;
         } else {
           alert("Booking failed: " + (data.message || 'Unknown error'));
         }
