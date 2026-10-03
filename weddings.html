@@ -1209,14 +1209,27 @@
       return lines.filter(Boolean).join('\n');
     }
     var form = document.getElementById('enqForm');
-    if(form){
-      form.addEventListener('submit', function(ev){
-        ev.preventDefault();
-        var url = 'mailto:orchidtree.blr@gmail.com?subject=' + encodeURIComponent('Wedding event enquiry')
-          + '&body=' + encodeURIComponent(buildMessage());
-        window.location.href = url;
-      });
-    }
+      if(form){
+        form.addEventListener('submit', function(ev){
+          ev.preventDefault();
+          var btn = form.querySelector('button[type="submit"]');
+          var originalText = btn.innerHTML;
+          btn.innerHTML = 'Submitting...';
+          btn.disabled = true;
+          
+          fetch('/api/enquire', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ message: buildMessage() })
+          }).then(function() {
+            btn.innerHTML = 'Enquiry submitted';
+            setTimeout(function(){ btn.innerHTML = originalText; btn.disabled = false; form.reset(); }, 4000);
+          }).catch(function() {
+            btn.innerHTML = 'Error. Try again';
+            setTimeout(function(){ btn.innerHTML = originalText; btn.disabled = false; }, 3000);
+          });
+        });
+      }
     var emailLink = document.getElementById('enqEmailBtn');
     if(emailLink){
       emailLink.addEventListener('click', function(){

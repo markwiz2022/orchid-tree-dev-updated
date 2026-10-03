@@ -561,7 +561,43 @@
 
   <script>
   (function(){
-    // ---- nav solidify on scroll ----
+    
+      function v(id){ var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+      function buildMessage(){
+        var lines = [
+          'Hi Orchid Tree, we would love to enquire about a gathering.',
+          v('enqName')   ? 'Name: ' + v('enqName') : '',
+          v('enqEmailIn')? 'Email: ' + v('enqEmailIn') : '',
+          v('enqType')   ? 'Gathering type: ' + v('enqType') : '',
+          v('enqDate')   ? 'Preferred date: ' + v('enqDate') : '',
+          v('enqGuests') ? 'Guests: ' + v('enqGuests') : ''
+        ];
+        return lines.filter(Boolean).join('\n');
+      }
+      var form = document.getElementById('enqForm');
+      if(form){
+        form.addEventListener('submit', function(ev){
+          ev.preventDefault();
+          var btn = form.querySelector('button[type="submit"]');
+          var originalText = btn.innerHTML;
+          btn.innerHTML = 'Submitting...';
+          btn.disabled = true;
+          
+          fetch('/api/enquire', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ message: buildMessage() })
+          }).then(function() {
+            btn.innerHTML = 'Enquiry submitted';
+            setTimeout(function(){ btn.innerHTML = originalText; btn.disabled = false; form.reset(); }, 4000);
+          }).catch(function() {
+            btn.innerHTML = 'Error. Try again';
+            setTimeout(function(){ btn.innerHTML = originalText; btn.disabled = false; }, 3000);
+          });
+        });
+      }
+
+      // ---- nav solidify on scroll ----
     var nav = document.getElementById('nav');
     function navScroll(){ if(window.scrollY > 60) nav.classList.add('solid'); else nav.classList.remove('solid'); }
     window.addEventListener('scroll', navScroll, {passive:true}); navScroll();

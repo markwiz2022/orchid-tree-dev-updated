@@ -23,12 +23,14 @@ import createBookingHandler from './api/create-booking.js';
 import razorpayOrderHandler from './api/razorpay-order.js';
 import confirmPaymentHandler from './api/confirm-payment.js';
 import verifyRecaptchaHandler from './api/verify-recaptcha.js';
+import enquireHandler from './api/enquire.js';
 
 app.all('/api/availability', availabilityHandler);
 app.all('/api/create-booking', createBookingHandler);
 app.all('/api/razorpay-order', razorpayOrderHandler);
 app.all('/api/confirm-payment', confirmPaymentHandler);
 app.all('/api/verify-recaptcha', verifyRecaptchaHandler);
+app.all('/api/enquire', enquireHandler);
 
 // Serve Static Frontend Files
 app.get('/home(.html)?', (req, res) => {
