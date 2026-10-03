@@ -8,6 +8,11 @@ export default async function handler(req, res) {
 
   const { checkin, checkout, adults, children, guestName, guestPhone, guestEmail, roomIds, subtotal } = req.body;
 
+  const totalGuests = (parseInt(adults) || 0) + (parseInt(children) || 0);
+  if (totalGuests > 34) {
+    return res.status(400).json({ error: 'Orchid Tree accommodates a maximum of 34 overnight guests.' });
+  }
+
   // Map our logical room categories to Stayflexi roomTypeIds
   const typeMap = {
     'bael': '12370', 'bilva': '12370', 'datura': '12370', 'tulsi': '12370',

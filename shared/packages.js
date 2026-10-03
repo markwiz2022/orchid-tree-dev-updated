@@ -113,6 +113,7 @@
 
   // ---- the fork: room-TYPE options that each fit the group in one room ------
   function generateSingleRooms(group) {
+    if (groupTotal(group) > 34) return [];
     var g = normGroup(group);
     var totalGuests = groupTotal(g);
 
@@ -305,6 +306,7 @@
 
   // ---- generatePackages: up to three distinct multi-room bundles -----------
   function generatePackages(group) {
+    if (groupTotal(group) > 34) return [];
     var g = normGroup(group);
     var seen = {};
     var out = [];
