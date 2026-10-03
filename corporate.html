@@ -1286,12 +1286,15 @@
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({ message: buildMessage() })
+          }).then(function(res) {
+            if (!res.ok) throw new Error('Server error');
+            return res.json();
           }).then(function() {
             btn.innerHTML = 'Enquiry submitted';
             setTimeout(function(){ btn.innerHTML = originalText; btn.disabled = false; form.reset(); }, 4000);
           }).catch(function() {
-            btn.innerHTML = 'Error. Try again';
-            setTimeout(function(){ btn.innerHTML = originalText; btn.disabled = false; }, 3000);
+            btn.innerHTML = 'Setup required';
+            setTimeout(function(){ btn.innerHTML = originalText; btn.disabled = false; }, 4000);
           });
         });
       }
